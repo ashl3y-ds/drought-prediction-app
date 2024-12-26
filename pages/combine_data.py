@@ -1,6 +1,6 @@
+# Upload data page
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 
 st.title("Upload Data")
 st.write("This page allows you to upload datasets.")
@@ -16,6 +16,11 @@ if uploaded_file1 and uploaded_file2:
     # Combine the dataframes
     combined_df = pd.concat([df1, df2], ignore_index=True)
     st.success("Datasets combined successfully!")
+
+    # Save combined data to session state for later use
+    st.session_state["combined_df"] = combined_df
+
+    # Display the combined dataframe
     st.write(combined_df)
 
     # Save combined data to session state for later use
