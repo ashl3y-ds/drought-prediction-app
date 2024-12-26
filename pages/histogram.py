@@ -5,28 +5,25 @@ import streamlit as st
 # Function to show histograms
 def show_histograms():
     # Load the data (Replace with actual file path or data)
-    @st.cache_data
-    def load_data():
-        df = pd.read_csv('combined_df')  # Example path to your dataset
-        return df
+    # Plot histograms of numeric columns
+    st.write("### Histogram of Numeric Columns")
 
-    df = load_data()
+    # Get numeric columns
+    numeric_cols = combined_df.select_dtypes(include=['float64', 'int64']).columns
 
-    # Define the columns to visualize (choose relevant columns)
-    measures_column_list = ['T2M', 'PRECTOT', 'PS', 'T2M_MAX']  # Replace with actual columns
-
-    # Plot each column as a histogram
-    for col_name in measures_column_list:
-        fig, ax = plt.subplots()  # Create a figure
-
-        # Create a histogram
-        ax.hist(df[col_name], bins=20, density=True)
+    # Loop over numeric columns and plot histograms
+    for col in numeric_cols:
+        # Create a figure for the histogram
+        fig, ax = plt.subplots()
         
-        # Set labels and title
-        ax.set_xlabel(col_name)
+        # Plot histogram
+        ax.hist(combined_df[col], bins=20, density=True)
+        
+        # Set the labels and title
+        ax.set_xlabel(col)
         ax.set_ylabel('Density')
-        ax.set_title(f'Distribution of {col_name}')
-
-        # Display the plot
+        ax.set_title(f'Distribution of {col}')
+        
+        # Display the plot in Streamlit
         st.pyplot(fig)
 
