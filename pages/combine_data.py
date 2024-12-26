@@ -2,28 +2,30 @@
 import streamlit as st
 import pandas as pd
 
-st.title("Upload Data")
-st.write("This page allows you to upload datasets.")
+st.title("Read Data")
+st.write("This page directly reads and combines predefined datasets.")
 
-uploaded_file1 = st.file_uploader("Upload the first CSV file", type="csv")
-uploaded_file2 = st.file_uploader("Upload the second CSV file", type="csv")
+# Define file paths or URLs to the datasets
+url1 = "https://raw.githubusercontent.com/username/repo-name/main/data/data_part1.csv"
+url2 = "https://raw.githubusercontent.com/username/repo-name/main/data/data_part2.csv"
 
-if uploaded_file1 and uploaded_file2:
-    # Read the uploaded CSV files
-    df1 = pd.read_csv(uploaded_file1)
-    df2 = pd.read_csv(uploaded_file2)
+@st.cache_data
+def load_and_combine_data():
+    # Read CSV files
+    df1 = pd.read_csv(url1)  # Replace with the raw URL to data_part1.csv
+    df2 = pd.read_csv(url2)  # Replace with the raw URL to data_part2.csv
 
     # Combine the dataframes
     combined_df = pd.concat([df1, df2], ignore_index=True)
-    st.success("Datasets combined successfully!")
+    return combined_df
 
-    # Save combined data to session state for later use
-    st.session_state["combined_df"] = combined_df
+# Load combined dataset
+combined_df = load_and_combine_data()
+st.success("Datasets loaded and combined successfully!")
 
-    # Display the combined dataframe
-    st.write(combined_df)
+# Display the combined dataframe
+st.write(combined_df)
 
-    # Save combined data to session state for later use
-    st.session_state["combined_df"] = combined_df
-
+# Save combined data to session state for later use
+st.session_state["combined_df"] = combined_df
  
