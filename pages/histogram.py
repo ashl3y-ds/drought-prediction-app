@@ -9,7 +9,7 @@ def show_histograms():
     st.write("### Histogram of Numeric Columns")
 
     # Get numeric columns
-    numeric_cols = combined_df.select_dtypes(include=['float64', 'int64']).columns
+    numeric_cols = combined_df.select_dtypes(include=['float64']).columns
 
     # Loop over numeric columns and plot histograms
     for col in numeric_cols:
