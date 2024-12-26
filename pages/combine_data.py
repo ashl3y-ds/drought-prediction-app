@@ -6,8 +6,8 @@ st.title("Read Data")
 st.write("This page directly reads and combines predefined datasets.")
 
 # Define file paths or URLs to the datasets
-url1 = "https://raw.githubusercontent.com/username/repo-name/main/data/data_part1.csv"
-url2 = "https://raw.githubusercontent.com/username/repo-name/main/data/data_part2.csv"
+url1 = "https://github.com/ashl3y-ds/drought-prediction-app/blob/main/data/cleaned_drought_data_part1.csv"
+url2 = "https://github.com/ashl3y-ds/drought-prediction-app/blob/main/data/cleaned_drought_data_part2.csv"
 
 @st.cache_data
 def load_and_combine_data():
