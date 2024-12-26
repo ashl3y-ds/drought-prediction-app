@@ -7,7 +7,7 @@ def show_histograms():
     # Load the data (Replace with actual file path or data)
     @st.cache_data
     def load_data():
-        df = pd.read_csv('data/cleaned_drought_data_part1.csv')  # Example path to your dataset
+        df = pd.read_csv('combined_df')  # Example path to your dataset
         return df
 
     df = load_data()
