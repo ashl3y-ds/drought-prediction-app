@@ -12,8 +12,8 @@ url2 = "https://github.com/ashl3y-ds/drought-prediction-app/blob/main/data/clean
 @st.cache_data
 def load_and_combine_data():
     # Read CSV files
-    df1 = pd.read_csv(url1)  # Replace with the raw URL to data_part1.csv
-    df2 = pd.read_csv(url2)  # Replace with the raw URL to data_part2.csv
+    df1 = pd.read_csv(url1, na_values=['NA', ''], encoding='utf-8')  # Replace with the raw URL to data_part1.csv
+    df2 = pd.read_csv(url2, na_values=['NA', ''], encoding='utf-8')  # Replace with the raw URL to data_part2.csv
 
     # Combine the dataframes
     combined_df = pd.concat([df1, df2], ignore_index=True)
