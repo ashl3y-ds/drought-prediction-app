@@ -6,4 +6,4 @@ boto3
 matplotlib
 plotly
 scipy
-scikit-learn==0.24.2
+scikit-learn
