@@ -1,7 +1,6 @@
 openai
 pandas
 numpy
-scikit-learn==1.0.2
 langchain==0.0.148
 boto3
 matplotlib
