@@ -58,10 +58,10 @@ else:
                             'TS', 'WS10M', 'WS10M_MAX', 'WS10M_MIN', 'WS10M_RANGE', 'WS50M', 'WS50M_MAX', 'WS50M_MIN', 'WS50M_RANGE']
 
     # Load the dataframe
-    combined_df = st.session_state["combined_df"]
+    cleaned_df = st.session_state["combined_df"]
 
     # Calculate correlation matrix
-    correlation_matrix = combined_df[measures_column_list].corr()
+    correlation_matrix = cleaned_df[measures_column_list].corr()
 
     # Streamlit title
     st.title("Feature Correlation Analysis")
