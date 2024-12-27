@@ -19,7 +19,7 @@ columns_to_drop = [col for col in columns_to_drop if col in combined_df.columns]
 dataset = combined_df.drop(columns=columns_to_drop)
 
 X = dataset.iloc[:, :-1].values  # Features
-y = dataset.iloc[:, -1].values   # Target
+y = dataset.("score")   # Target
 
 # Scale features
 scaler = StandardScaler()
