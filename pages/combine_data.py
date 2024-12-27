@@ -37,10 +37,6 @@ st.write(rounded_score_counts)
 st.write("### Descriptive Statistics (Numeric Columns)")
 st.write(combined_df.describe())
 
-# Show descriptive statistics for categorical columns
-st.write("### Descriptive Statistics (Categorical Columns)")
-st.write(combined_df.describe(include=['object']))
-
 # Save combined data to session state for later use
 st.session_state["combined_df"] = combined_df
 
