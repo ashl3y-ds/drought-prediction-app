@@ -1,35 +1,55 @@
+import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-import streamlit as st
 
-# Title
-st.title("Advanced Histogram Analysis")
-
+# Load and combine the datasets (adjust paths as needed)
 @st.cache_data
-def load_combined_data():
-    df1 = pd.read_csv("data/cleaned_drought_data_part1.csv")
-    df2 = pd.read_csv("data/cleaned_drought_data_part2.csv")
-    return pd.concat([df1, df2], ignore_index=True)
+def load_data():
+    df1 = pd.read_csv("data/cleaned_drought_data_part1.csv")  # Replace with your file
+    df2 = pd.read_csv("data/cleaned_drought_data_part2.csv")  # Replace with your file
+    combined_df = pd.concat([df1, df2], ignore_index=True)
+    return combined_df
 
-df = load_combined_data()
+# Load data
+combined_df = load_data()
 
-# Feature selection
-feature = st.selectbox("Select a feature for analysis:", ['T2M', 'PRECTOT', 'score'])
+# Scatter Plot Generator
+st.title("Interactive Scatter Plot Generator")
 
-# Add threshold filtering
-threshold = st.slider(f"Filter {feature} (choose a threshold):", 
-                      min_value=float(df[feature].min()), 
-                      max_value=float(df[feature].max()),
-                      value=float(df[feature].mean()))
+st.write("Choose the features to plot a scatter plot based on the combined dataset.")
 
-# Filter dataset
-filtered_df = df[df[feature] >= threshold]
+# Dropdowns for user to select X-axis and Y-axis features
+x_feature = st.selectbox("Select X-axis Feature", options=combined_df.columns)
+y_feature = st.selectbox("Select Y-axis Feature", options=combined_df.columns)
 
-# Plot histogram
-fig, ax = plt.subplots()
-ax.hist(filtered_df[feature], bins=20, density=True)
-ax.set_title(f"{feature} Distribution (Values ≥ {threshold})")
-ax.set_xlabel(feature)
-ax.set_ylabel('Density')
-st.pyplot(fig)
+# Optional color grouping
+color_by = st.selectbox(
+    "Optional: Select a Feature to Color By (Leave Empty for No Coloring)", 
+    options=["None"] + list(combined_df.columns)
+)
 
+# Generate Scatter Plot
+if x_feature and y_feature:
+    st.write(f"### Scatter Plot: {x_feature} vs. {y_feature}")
+    fig, ax = plt.subplots()
+    
+    # Scatter plot logic
+    if color_by != "None":
+        scatter = ax.scatter(
+            combined_df[x_feature], 
+            combined_df[y_feature], 
+            c=combined_df[color_by], 
+            cmap="viridis", alpha=0.7
+        )
+        cbar = plt.colorbar(scatter, ax=ax)
+        cbar.set_label(color_by)
+    else:
+        ax.scatter(combined_df[x_feature], combined_df[y_feature], alpha=0.7)
+
+    # Labeling
+    ax.set_xlabel(x_feature)
+    ax.set_ylabel(y_feature)
+    ax.set_title(f"Scatter Plot: {x_feature} vs. {y_feature}")
+
+    # Display in Streamlit
+    st.pyplot(fig)
