@@ -67,35 +67,50 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
     # Compute confusion matrix
     cm = confusion_matrix(y_test, y_pred)
 
-st.write("### Customized Confusion Matrix with Outside Coloring:")
+st.write("### Customized Confusion Matrix (No Heatmap):")
 fig, ax = plt.subplots(figsize=(8, 6))  # Adjust figure size as needed
 
 # Set custom background colors for the figure and axes
 fig.patch.set_facecolor("#808080")  # Background color for the figure
 ax.set_facecolor("#808080")         # Background color for the axes
 
-# Plot the confusion matrix as integers
-sns.heatmap(
-    cm, 
-    annot=True,            # Show actual numerical values
-    fmt="d",               # Integer format for numbers
-    cmap="coolwarm",       # Colormap for the matrix
-    cbar=True,             # Enable the color bar
-    square=True,
-    linewidths=0.5,        # Borders between the squares
-    linecolor='black',     # Border color for squares
-    xticklabels=np.unique(y), 
-    yticklabels=np.unique(y), 
-    ax=ax                  # Use the customized axes
-)
+# Number of classes
+classes = np.unique(y)
+n_classes = len(classes)
 
-# Styling for title, labels, and colorbar
-ax.set_xlabel("Predicted Labels", fontsize=12, fontweight="bold", color="black")
-ax.set_ylabel("True Labels", fontsize=12, fontweight="bold", color="black")
-ax.set_title(f"Customized Confusion Matrix", fontsize=14, fontweight="bold", color="black")
+# Draw grid for the matrix
+ax.set_xticks(np.arange(n_classes) + 0.5, minor=False)
+ax.set_yticks(np.arange(n_classes) + 0.5, minor=False)
+ax.set_xticks(np.arange(n_classes + 1), minor=True)
+ax.set_yticks(np.arange(n_classes + 1), minor=True)
 
-# Tight layout without additional padding
-plt.subplots_adjust(left=0, right=1, top=1, bottom=0)  # Remove surrounding margins completely
+# Configure grid and labels
+ax.set_xticklabels(classes, fontsize=12, fontweight="bold", color="black")
+ax.set_yticklabels(classes, fontsize=12, fontweight="bold", color="black")
+ax.xaxis.tick_top()  # Move the x-axis labels to the top
+ax.xaxis.set_label_position('top')
+ax.tick_params(axis='both', which='both', length=0)  # Hide tick marks
+
+# Customize appearance
+ax.grid(False)  # Turn off grid by default
+ax.grid(True, which="minor", color="black", linewidth=1)  # Show gridlines around cells
+ax.set_xlim(0, n_classes)
+ax.set_ylim(n_classes, 0)
+
+# Add the confusion matrix values as text
+for i in range(n_classes):
+    for j in range(n_classes):
+        color = "white" if cm[i, j] > cm.max() / 2 else "black"  # Adjust text color
+        ax.text(j + 0.5, i + 0.5, str(cm[i, j]), 
+                ha="center", va="center", fontsize=12, color=color)
+
+# Label titles
+ax.set_xlabel("Predicted Labels", fontsize=12, fontweight="bold", color="black", labelpad=20)
+ax.set_ylabel("True Labels", fontsize=12, fontweight="bold", color="black", labelpad=20)
+ax.set_title("Customized Confusion Matrix", fontsize=14, fontweight="bold", color="black", pad=20)
+
+# Tight layout
+plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1)
 
 # Display the plot
 st.pyplot(fig)
