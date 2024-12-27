@@ -98,6 +98,8 @@ else:
     # Create a heatmap plot of the correlation matrix
     st.write("### Correlation Heatmap")
 
+        plt.figure(figsize=(12, 8))
+
     sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5, cbar_kws={"shrink": .8})
 
     # Set title and labels
