@@ -134,15 +134,20 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
             model_names = [report["model_name"] for report in st.session_state["model_reports"]]
             metric_scores = []
 
+        # Dynamically extract the required metric from the report
+        for report in st.session_state["model_reports"]:
             if metric == "Precision":
-                metric_scores = [report["precision"] for report in st.session_state["model_reports"]]
+                # Access precision from the 'weighted avg' or per class
+                metric_scores.append(report["classification_report"].loc["weighted avg", "precision"] * 100)
             elif metric == "Recall":
-                metric_scores = [report["recall"] for report in st.session_state["model_reports"]]
+                # Access recall from the 'weighted avg' or per class
+                metric_scores.append(report["classification_report"].loc["weighted avg", "recall"] * 100)
             elif metric == "F1-Score":
-                metric_scores = [report["f1_score"] for report in st.session_state["model_reports"]]
+                # Access F1-score from the 'weighted avg' or per class
+                metric_scores.append(report["classification_report"].loc["weighted avg", "f1-score"] * 100)
             elif metric == "Accuracy":
-                metric_scores = [report["accuracy"] for report in st.session_state["model_reports"]]
-
+                # The accuracy is already stored separately in report
+                metric_scores.append(report["accuracy"])
             # Create a histogram for model metric comparison
             fig, ax = plt.subplots(figsize=(10, 6))
             ax.hist(metric_scores, bins=len(st.session_state["model_reports"]), color='skyblue', edgecolor="black")
