@@ -103,14 +103,22 @@ ax.set_ylim(n_classes, 0)
 for i in range(n_classes):
     for j in range(n_classes):
         intensity = normalized_cm[i, j]  # Compute color intensity
-        yellow_shade = (1.0, 1.0, 0.6 + intensity / 3, 1.0)  # Dynamic yellow shade
-        rect = plt.Rectangle((j, i), 1, 1, facecolor=yellow_shade, edgecolor="gray")
+
+        # Interpolating color from yellow to orange
+        red_intensity = 1.0  # Red channel fixed
+        green_intensity = 1.0 - 0.5 * intensity  # Vary green from 1 (yellow) to 0.5 (orange)
+        blue_intensity = 0.0  # Blue channel fixed at 0 for yellow/orange tones
+        cell_color = (red_intensity, green_intensity, blue_intensity, 1.0)  # RGBA format
+
+        # Draw the cell rectangle with dynamic color
+        rect = plt.Rectangle((j, i), 1, 1, facecolor=cell_color, edgecolor="gray")
         ax.add_patch(rect)
 
-        # Add value text in the matrix box
-        ax.text(j + 0.5, i + 0.5, str(cm[i, j]), ha="center", va="center", 
-                fontsize=12, color="black", fontweight="bold")
-
+        # Add value as text in the matrix box
+        ax.text(
+            j + 0.5, i + 0.5, str(cm[i, j]),
+            ha="center", va="center", fontsize=12, color="black", fontweight="bold"
+        )
 # Labeling
 ax.set_xlabel("Predicted Labels", fontsize=12, fontweight="bold", color="red", labelpad=20)
 ax.set_ylabel("True Labels", fontsize=12, fontweight="bold", color="red", labelpad=20)
