@@ -61,17 +61,27 @@ with st.form(key='drought_prediction_form'):
 
     submit_button = st.form_submit_button(label='Predict Drought Level')
 
-# Predict drought level
+# Prediction function
 def predict_drought_level(ps, qv2m, t2m, t2mdew, t2mwet, t2m_max, t2m_min, t2m_range, ts, ws10m_max, ws10m_range, ws50m, ws50m_max, ws50m_range, month, day):
     input_features = [ps, qv2m, t2m, t2mdew, t2mwet, t2m_max, t2m_min, t2m_range, ts, ws10m_max, ws10m_range, ws50m, ws50m_max, ws50m_range, month, day]
     scaled_features = scaler.transform([input_features])
-    prediction = model.predict(scaled_features)[0]
-    
-    print(f"Raw prediction value: {prediction}")  # Debug
-    return prediction if prediction in range(len(drought_levels)) else None  # Validate
+    prediction = model.predict(scaled_features)[0]  # Predict drought level
 
-    if prediction is None:
-    st.error("Prediction out of bounds. Please check model or input data.")
-else:
-    st.subheader("Prediction Result")
-    st.write(f"Drought Level: **{drought_levels[prediction]}**")
+    print(f"Raw prediction value: {prediction}")  # Debugging output
+    return prediction
+
+drought_levels = ["No Drought", "Mild Drought", "Moderate Drought", "Severe Drought"]  # Define drought levels
+
+# Predict and display result in the Streamlit app
+if submit_button:
+    prediction = predict_drought_level(
+        ps, qv2m, t2m, t2mdew, t2mwet, t2m_max, t2m_min, t2m_range, ts,
+        ws10m_max, ws10m_range, ws50m, ws50m_max, ws50m_range, month, day
+    )
+    
+    # Validate prediction
+    if prediction not in range(len(drought_levels)):
+        st.error("Prediction out of bounds. Please check the model or input data.")
+    else:
+        st.subheader("Prediction Result")
+        st.write(f"Drought Level: **{drought_levels[prediction]}**")
