@@ -141,3 +141,21 @@ formatted_report_df = report_df.style.format(precision=2)
 # Display the report in the Streamlit app
 st.write("### Classification Report:")
 st.dataframe(formatted_report_df)
+
+    # Button to show comparison of all models' reports
+    if st.button("Show Comparison of All Models"):
+        if len(st.session_state["model_reports"]) > 1:
+            # Combine all classification reports for comparison
+            comparison_df = pd.dataframe()
+
+            for report in st.session_state["model_reports"]:
+                model_report = report["classification_report"]
+                model_name = report["model_name"]
+                model_report["Model"] = model_name
+                comparison_df = pd.concat([comparison_df, model_report])
+
+            # Display the comparison dataframe
+            st.write("### Comparison of Models' Classification Reports:")
+            st.dataframe(comparison_df.style.format(precision=2))
+        else:
+            st.write("Please train more than one model to see the comparison.")
