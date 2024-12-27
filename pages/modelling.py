@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from sklearn import tree
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
@@ -10,7 +9,6 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 # Ensure that both filtered features and target variable are available
 if "filtered_df" in st.session_state and "target" in st.session_state:
@@ -39,6 +37,10 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
     st.write(f"Number of training samples: {X_train.shape[0]}")
     st.write(f"Number of testing samples: {X_test.shape[0]}")
 
+    # Initialize an empty list to store classification reports in session state
+    if "model_reports" not in st.session_state:
+        st.session_state["model_reports"] = []
+
     # Algorithm selection by the user
     algorithm = st.selectbox("Select Algorithm", ["Support Vector Machine (SVM)", "Decision Tree", "K-Nearest Neighbors (KNN)", "Random Forest"])
 
@@ -58,95 +60,75 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
     # Make predictions
     y_pred = model.predict(X_test)
 
-
-    bg_color = "#f0f2f6"
-    # Evaluate the model
+    # Model evaluation
     accuracy = accuracy_score(y_test, y_pred)
     st.write(f"Model accuracy: {accuracy * 100:.2f}%")
 
-    # Compute confusion matrix
+    # Store the classification report for this model
+    classes = np.unique(y)
+    report_dict = classification_report(y_test, y_pred, target_names=[str(c) for c in classes], output_dict=True)
+    report_df = pd.DataFrame(report_dict).transpose()
+
+    # Add model report to the list of reports in session state
+    st.session_state["model_reports"].append({
+        "model_name": algorithm,
+        "accuracy": accuracy * 100,
+        "classification_report": report_df
+    })
+
+    # Display the confusion matrix
     cm = confusion_matrix(y_test, y_pred)
+    fig, ax = plt.subplots(figsize=(5, 3))  # Adjust figure size as needed
 
-st.write("Confusion Matrix:")
-fig, ax = plt.subplots(figsize=(5, 3))  # Adjust figure size as needed
+    # Normalizing the values to create dynamic coloring (scaling between 0 and 1)
+    normalized_cm = cm / cm.max()
+    n_classes = len(classes)
 
-# Set custom background colors for the figure and axes
-fig.patch.set_alpha(0) 
-      # Background color for the axes
+    ax.set_xticks(np.arange(n_classes) + 0.5, minor=False)
+    ax.set_yticks(np.arange(n_classes) + 0.5, minor=False)
+    ax.set_xticks(np.arange(n_classes + 1), minor=True)
+    ax.set_yticks(np.arange(n_classes + 1), minor=True)
+    ax.set_xticklabels(classes, fontsize=12, fontweight="bold", color="yellow")
+    ax.set_yticklabels(classes, fontsize=12, fontweight="bold", color="yellow")
+    ax.xaxis.tick_top()  # Move x-axis labels to the top
+    ax.xaxis.set_label_position("top")
+    ax.tick_params(axis="both", which="both", length=0)  # Hide tick marks
 
-# Number of classes
-classes = np.unique(y)
-n_classes = len(classes)
+    # Customize gridlines for cells
+    ax.grid(False)
+    ax.grid(True, which="minor", color="gray", linewidth=1)
+    ax.set_xlim(0, n_classes)
+    ax.set_ylim(n_classes, 0)
 
-# Normalizing the values to create dynamic coloring (scaling between 0 and 1)
-normalized_cm = cm / cm.max()
+    # Add dynamic cell colors and values
+    for i in range(n_classes):
+        for j in range(n_classes):
+            intensity = normalized_cm[i, j]  # Compute color intensity
+            red_intensity = 1.0  # Red channel fixed
+            green_intensity = 1.0 - 0.5 * intensity  # Vary green from 1 (yellow) to 0.5 (orange)
+            blue_intensity = 0.0  # Blue channel fixed at 0 for yellow/orange tones
+            cell_color = (red_intensity, green_intensity, blue_intensity, 1.0)  # RGBA format
+            rect = plt.Rectangle((j, i), 1, 1, facecolor=cell_color, edgecolor="gray")
+            ax.add_patch(rect)
+            ax.text(j + 0.5, i + 0.5, str(cm[i, j]), ha="center", va="center", fontsize=12, color="black")
 
-# Draw grid for the matrix
-# Configure grid and labels
-ax.set_xticks(np.arange(n_classes) + 0.5, minor=False)
-ax.set_yticks(np.arange(n_classes) + 0.5, minor=False)
-ax.set_xticks(np.arange(n_classes + 1), minor=True)
-ax.set_yticks(np.arange(n_classes + 1), minor=True)
-ax.set_xticklabels(classes, fontsize=12, fontweight="bold", color="yellow")
-ax.set_yticklabels(classes, fontsize=12, fontweight="bold", color="yellow")
-ax.xaxis.tick_top()  # Move x-axis labels to the top
-ax.xaxis.set_label_position("top")
-ax.tick_params(axis="both", which="both", length=0)  # Hide tick marks
+    # Labeling the axes
+    ax.set_xlabel("Predicted Labels", fontsize=12, fontweight="bold", color="red", labelpad=20)
+    ax.set_ylabel("True Labels", fontsize=12, fontweight="bold", color="red", labelpad=20)
+    plt.subplots_adjust(left=0.2, right=0.9, top=0.9, bottom=0.2)
 
-# Customize gridlines for cells
-ax.grid(False)
-ax.grid(True, which="minor", color="gray", linewidth=1)
-ax.set_xlim(0, n_classes)
-ax.set_ylim(n_classes, 0)
+    # Display the plot
+    st.pyplot(fig)
 
-# Add dynamic cell colors and values
-for i in range(n_classes):
-    for j in range(n_classes):
-        intensity = normalized_cm[i, j]  # Compute color intensity
-
-        # Interpolating color from yellow to orange
-        red_intensity = 1.0  # Red channel fixed
-        green_intensity = 1.0 - 0.5 * intensity  # Vary green from 1 (yellow) to 0.5 (orange)
-        blue_intensity = 0.0  # Blue channel fixed at 0 for yellow/orange tones
-        cell_color = (red_intensity, green_intensity, blue_intensity, 1.0)  # RGBA format
-
-        # Draw the cell rectangle with dynamic color
-        rect = plt.Rectangle((j, i), 1, 1, facecolor=cell_color, edgecolor="gray")
-        ax.add_patch(rect)
-
-        # Add value as text in the matrix box
-        ax.text(
-            j + 0.5, i + 0.5, str(cm[i, j]),
-            ha="center", va="center", fontsize=12, color="black", fontweight="bold"
-        )
-# Labeling
-ax.set_xlabel("Predicted Labels", fontsize=12, fontweight="bold", color="red", labelpad=20)
-ax.set_ylabel("True Labels", fontsize=12, fontweight="bold", color="red", labelpad=20)
-
-# Adjust layout for spacing
-plt.subplots_adjust(left=0.2, right=0.9, top=0.9, bottom=0.2)
-
-# Display the plot
-st.pyplot(fig)
-
-# Display the classification report
-report_dict = classification_report(y_test, y_pred, target_names=[str(c) for c in classes], output_dict=True)
-
-# Convert the dictionary to a pandas DataFrame
-report_df = pd.DataFrame(report_dict).transpose()
-
-# Format precision and recall to two decimal places
-formatted_report_df = report_df.style.format(precision=2)
-
-# Display the report in the Streamlit app
-st.write("### Classification Report:")
-st.dataframe(formatted_report_df)
+    # Display the classification report for the selected model
+    st.write(f"### {algorithm} Classification Report:")
+    st.dataframe(report_df.style.format(precision=2))
 
     # Button to show comparison of all models' reports
-    st.button("Show Comparison of All Models"):
+    if st.button("Show Comparison of All Models"):
         if len(st.session_state["model_reports"]) > 1:
             # Combine all classification reports for comparison
-            comparison_df = pd.dataframe()
+            comparison_df = pd.DataFrame()
 
             for report in st.session_state["model_reports"]:
                 model_report = report["classification_report"]
