@@ -67,8 +67,8 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
     # Compute confusion matrix
     cm = confusion_matrix(y_test, y_pred)
 
-st.write("### Customized Confusion Matrix (Dynamic Color Based on Values):")
-fig, ax = plt.subplots(figsize=(5, 5))  # Adjust figure size as needed
+st.write("Confusion Matrix:")
+fig, ax = plt.subplots(figsize=(6, 8))  # Adjust figure size as needed
 
 # Set custom background colors for the figure and axes
 fig.patch.set_facecolor("#bebebe")  # Background color for the figure
