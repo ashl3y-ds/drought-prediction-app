@@ -22,9 +22,9 @@ dataset = combined_df.drop(columns=columns_to_drop)
 
 # Define features and target explicitly
 features = [
-    "ps", "qv2m", "t2m", "t2mdew", "t2mwet", "t2m_max", "t2m_min",
-    "t2m_range", "ts", "ws10m_max", "ws10m_range", "ws50m",
-    "ws50m_max", "ws50m_range", "month", "day"
+    "PS", "QV2M", "T2M", "T2MDEW", "T2MWET", "T2M_MAX", "T2M_MIN",
+    "T2M_RANGE", "TS", "WS10M_MAX", "WS10M_RANGE", "WS50M",
+    "WS50M_MAX", "WS50M_RANGE", "month", "day"
 ]
 target = "score"
 
