@@ -124,22 +124,37 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
     st.write(f"### {algorithm} Classification Report:")
     st.dataframe(report_df.style.format(precision=2))
 
-    # Button to show comparison of model accuracies
-    if st.button("Compare Model Accuracies"):
+    metric = st.selectbox("Select Metric to Compare", ["Precision", "Recall", "F1-Score", "Accuracy"])
+
+    # Button to show comparison of model accuracies or other metrics
+    if st.button("Compare Model Metrics"):
         # Only proceed if we have more than one model
         if len(st.session_state["model_reports"]) > 1:
-            # Extract model names and accuracy scores
+            # Extract model names and selected metric scores
             model_names = [report["model_name"] for report in st.session_state["model_reports"]]
-            accuracy_scores = [report["accuracy"] for report in st.session_state["model_reports"]]
+            metric_scores = []
 
-            # Create a bar plot for model comparison
+            if metric == "Precision":
+                metric_scores = [report["precision"] for report in st.session_state["model_reports"]]
+            elif metric == "Recall":
+                metric_scores = [report["recall"] for report in st.session_state["model_reports"]]
+            elif metric == "F1-Score":
+                metric_scores = [report["f1_score"] for report in st.session_state["model_reports"]]
+            elif metric == "Accuracy":
+                metric_scores = [report["accuracy"] for report in st.session_state["model_reports"]]
+
+            # Create a histogram for model metric comparison
             fig, ax = plt.subplots(figsize=(10, 6))
-            ax.barh(model_names, accuracy_scores, color='skyblue')
-            ax.set_xlabel('Accuracy (%)', fontsize=14, fontweight="bold")
-            ax.set_ylabel('Models', fontsize=14, fontweight="bold")
-            ax.set_title('Comparison of Model Accuracies', fontsize=16, fontweight="bold")
+            ax.hist(metric_scores, bins=len(st.session_state["model_reports"]), color='skyblue', edgecolor="black")
 
-            # Display the plot in Streamlit
+            # Customize histogram
+            ax.set_xlabel(f'{metric} Values', fontsize=14, fontweight="bold")
+            ax.set_ylabel('Frequency', fontsize=14, fontweight="bold")
+            ax.set_title(f'Histogram of {metric} Comparison Across Models', fontsize=16, fontweight="bold")
+            ax.set_xticks(np.arange(0, 101, 10))  # Adjust for the 0-100 scale (percentage)
+            ax.set_xlim([0, 100])
+
+            # Display the plot
             st.pyplot(fig)
         else:
             st.write("Please train more than one model to see the comparison.")
