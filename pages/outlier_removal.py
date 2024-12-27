@@ -48,6 +48,32 @@ else:
     else:
         st.write("No outliers removed yet.")
 
+# Check if the cleaned data is available in session state
+if 'cleaned_df' not in st.session_state:
+    st.error("Please load the data and remove outliers first.")
+else:
+    # Use cleaned_df for further analysis
+    cleaned_df = st.session_state["cleaned_df"]
+
+    # Define independent variables (exclude 'score', 'fips', 'date') and target variable ('score')
+    independent_variables = cleaned_df.drop(['score', 'fips', 'date'], axis=1)
+    target = cleaned_df['score']
+    
+    # Save them to session state
+    st.session_state["independent_variables"] = independent_variables
+    st.session_state["target"] = target
+
+    # Display the independent variables
+    st.write("### Independent Variables (First 5 rows):")
+    st.write(independent_variables.head())
+
+    # Display the target variable
+    st.write("### Target Variable (Score):")
+    st.write(target.head())
+
+    # Confirm that the variables are saved
+    st.success("Independent Variables and Target Variable saved to session state.")
+
 # Check if cleaned data is available in session state
 if 'cleaned_df' not in st.session_state:
     st.error("Please load the data and remove outliers first.")
@@ -72,8 +98,7 @@ else:
     # Create a heatmap plot of the correlation matrix
     st.write("### Correlation Heatmap")
 
-correlation_plot = drought_df_measures.corr()
-correlation_plot.style.background_gradient(cmap = 'RdYlGn')
+    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5, cbar_kws={"shrink": .8})
 
     # Set title and labels
     plt.title("Correlation Heatmap of Selected Features")
