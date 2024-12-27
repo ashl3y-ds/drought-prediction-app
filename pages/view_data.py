@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
 
 # Load the dataset
 @st.cache_data
