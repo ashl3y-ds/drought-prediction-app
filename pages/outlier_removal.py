@@ -49,7 +49,7 @@ else:
 
 
 # Assuming you have the combined_df data in Streamlit's session state
-if 'combined_df' not in st.session_state:
+if 'cleaned_df' not in st.session_state:
     st.error("Please load the data first on the Read Data page.")
 
 else:
