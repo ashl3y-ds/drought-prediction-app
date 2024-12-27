@@ -8,7 +8,7 @@ from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_score
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -128,3 +128,8 @@ plt.subplots_adjust(left=0.2, right=0.9, top=0.9, bottom=0.2)
 
 # Display the plot
 st.pyplot(fig)
+
+
+    st.write("Classification Report:")
+    report = classification_report(y_test, y_pred, target_names=[str(c) for c in classes])
+    st.text(report)
