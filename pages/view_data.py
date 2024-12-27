@@ -14,7 +14,7 @@ def load_and_combine_data():
 
 # Load and preprocess the dataset
 combined_df = load_and_combine_data()
-columns_to_drop = ['FIPS', 'DATE', 'PRECTOT', 'WS10M', 'WS10M_MIN', 'WS50M_MIN', 'YEAR']
+columns_to_drop = ['FIPS','DATE','PRECTOT','WS10M','WS10M_MIN','WS50M_MIN','YEAR']
 dataset = combined_df.drop(columns=columns_to_drop)
 
 # Ensure all values in the dataset are numeric, coercing errors to NaN
