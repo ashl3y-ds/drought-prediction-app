@@ -23,7 +23,7 @@ st.success("Datasets loaded and combined successfully!")
 combined_df['score'] = combined_df['score'].fillna(0).astype(int)
 
 # Show the value counts for rounded 'score'
-st.write("### Value Counts of Rounded 'score' Column")
+st.write("### Value Counts of score' Column")
 rounded_score_counts = combined_df['score'].round().value_counts()
 st.write(rounded_score_counts)
 
