@@ -71,8 +71,8 @@ st.write("### Customized Confusion Matrix with Outside Coloring:")
 fig, ax = plt.subplots(figsize=(8, 6))  # Adjust figure size as needed
 
 # Set custom background colors for the figure and axes
-fig.patch.set_facecolor("#575c5a")  # Light grey background for the figure
-ax.set_facecolor("#575c5a")         # Light blue background for the axes area outside the matrix
+fig.patch.set_facecolor("#363837")  # Light grey background for the figure
+ax.set_facecolor("#363837")         # Light blue background for the axes area outside the matrix
 
 # Normalize the confusion matrix if required
 normalized_cm = cm / cm.sum(axis=1, keepdims=True)  # Row-wise normalization for percentages
