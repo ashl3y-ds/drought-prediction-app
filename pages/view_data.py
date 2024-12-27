@@ -62,12 +62,16 @@ with st.form(key='drought_prediction_form'):
     submit_button = st.form_submit_button(label='Predict Drought Level')
 
 # Predict drought level
-if submit_button:
-    prediction = predict_drought_level(
-        ps, qv2m, t2m, t2mdew, t2mwet, t2m_max, t2m_min, t2m_range, ts, 
-        ws10m_max, ws10m_range, ws50m, ws50m_max, ws50m_range, month, day
-    )
-    drought_levels = ["No Drought", "Mild Drought", "Moderate Drought", "Severe Drought"]
-    st.subheader("Prediction Result")
-    st.write("Drought Level:", drought_levels[prediction])
+def predict_drought_level(ps, qv2m, t2m, t2mdew, t2mwet, t2m_max, t2m_min, t2m_range, ts, ws10m_max, ws10m_range, ws50m, ws50m_max, ws50m_range, month, day):
+    input_features = [ps, qv2m, t2m, t2mdew, t2mwet, t2m_max, t2m_min, t2m_range, ts, ws10m_max, ws10m_range, ws50m, ws50m_max, ws50m_range, month, day]
+    scaled_features = scaler.transform([input_features])
+    prediction = model.predict(scaled_features)[0]
+    
+    print(f"Raw prediction value: {prediction}")  # Debug
+    return prediction if prediction in range(len(drought_levels)) else None  # Validate
 
+    if prediction is None:
+    st.error("Prediction out of bounds. Please check model or input data.")
+else:
+    st.subheader("Prediction Result")
+    st.write(f"Drought Level: **{drought_levels[prediction]}**")
