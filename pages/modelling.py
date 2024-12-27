@@ -71,8 +71,8 @@ st.write("### Customized Confusion Matrix with Outside Coloring:")
 fig, ax = plt.subplots(figsize=(8, 6))  # Adjust figure size as needed
 
 # Set custom background colors for the figure and axes
-fig.patch.set_facecolor("#e0e0e0")  # Background color for the figure
-ax.set_facecolor("#e0e0e0")         # Background color for the axes
+fig.patch.set_facecolor("#808080")  # Background color for the figure
+ax.set_facecolor("#808080")         # Background color for the axes
 
 # Plot the confusion matrix as integers
 sns.heatmap(
