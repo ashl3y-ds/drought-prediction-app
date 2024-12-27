@@ -128,34 +128,43 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
 
     # Button to show comparison of model accuracies or other metrics
 
-    if st.button("Compare Model Metrics"):
-        # Only proceed if we have more than one model
-        if len(st.session_state["model_reports"]) > 1:
-            # Extract model names and selected metric scores
-            model_names = [report["model_name"] for report in st.session_state["model_reports"]]
-            metric_scores = []
+if st.button("Compare Model Metrics"):
+    # Only proceed if we have more than one model
+    if len(st.session_state["model_reports"]) > 1:
+        # Extract model names and selected metric scores
+        model_names = [report["model_name"] for report in st.session_state["model_reports"]]
+        metric_scores = []
 
+        # Dynamically extract the required metric from the classification report
+        for report in st.session_state["model_reports"]:
             if metric == "Precision":
-                metric_scores = [report["precision"] for report in st.session_state["model_reports"]]
+                # Access precision from 'weighted avg'
+                metric_scores.append(report["classification_report"].loc["weighted avg", "precision"] * 100)
             elif metric == "Recall":
-                metric_scores = [report["recall"] for report in st.session_state["model_reports"]]
+                # Access recall from 'weighted avg'
+                metric_scores.append(report["classification_report"].loc["weighted avg", "recall"] * 100)
             elif metric == "F1-Score":
-                metric_scores = [report["f1_score"] for report in st.session_state["model_reports"]]
+                # Access F1-score from 'weighted avg'
+                metric_scores.append(report["classification_report"].loc["weighted avg", "f1-score"] * 100)
             elif metric == "Accuracy":
-                metric_scores = [report["accuracy"] for report in st.session_state["model_reports"]]
+                # Accuracy is directly stored in the model report dictionary
+                metric_scores.append(report["accuracy"])
 
-            # Create a histogram for model metric comparison
-            fig, ax = plt.subplots(figsize=(10, 6))
-            ax.hist(metric_scores, bins=len(st.session_state["model_reports"]), color='skyblue', edgecolor="black")
+        # Create a bar graph to compare model metrics
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.bar(model_names, metric_scores, color='skyblue', edgecolor="black")
 
-            # Customize histogram
-            ax.set_xlabel(f'{metric} Values', fontsize=14, fontweight="bold")
-            ax.set_ylabel('Frequency', fontsize=14, fontweight="bold")
-            ax.set_title(f'Histogram of {metric} Comparison Across Models', fontsize=16, fontweight="bold")
-            ax.set_xticks(np.arange(0, 101, 10))  # Adjust for the 0-100 scale (percentage)
-            ax.set_xlim([0, 100])
+        # Customize the bar graph
+        ax.set_xlabel("Model Names", fontsize=14, fontweight="bold")
+        ax.set_ylabel(f"{metric} (%)", fontsize=14, fontweight="bold")
+        ax.set_title(f"Comparison of {metric} Across Models", fontsize=16, fontweight="bold")
+        ax.set_ylim(0, 100)  # Set range of y-axis from 0 to 100
 
-            # Display the plot
-            st.pyplot(fig)
-        else:
-            st.write("Please train more than one model to see the comparison.")
+        # Rotate x-axis labels for better readability
+        ax.set_xticks(range(len(model_names)))
+        ax.set_xticklabels(model_names, fontsize=12, rotation=45, ha="right")
+
+        # Display the bar graph in the Streamlit app
+        st.pyplot(fig)
+    else:
+        st.write("Please train more than one model to see the comparison.")
