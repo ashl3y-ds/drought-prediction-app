@@ -136,7 +136,6 @@ if st.button("Compare Model Metrics"):
         metric_scores = []
 
         # Dynamically extract the required metric from the classification report
-        for report in st.session_state["model_reports"]:
             if metric == "Precision":
                 # Access precision from 'weighted avg'
                 metric_scores.append(report["classification_report"].loc["weighted avg", "precision"] * 100)
