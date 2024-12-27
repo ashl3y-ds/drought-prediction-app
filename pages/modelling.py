@@ -26,6 +26,10 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
     st.session_state["y_train"] = y_train
     st.session_state["y_test"] = y_test
 
+    # Show the number of samples in train and test sets
+    st.write(f"Number of training samples: {X_train.shape[0]}")
+    st.write(f"Number of testing samples: {X_test.shape[0]}")
+
     st.success("Data split and scaled successfully!")
 else:
     st.error("Either the ranked features or the target variable is missing. Please check the data preparation step.")
