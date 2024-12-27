@@ -65,41 +65,38 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
     # Compute confusion matrix
     cm = confusion_matrix(y_test, y_pred)
 
-    # Custom confusion matrix visualization
-    st.write("### Customized Confusion Matrix with Outside Coloring:")
-    fig, ax = plt.subplots(figsize=(8, 6))  # Adjust figure size as needed
+st.write("### Customized Confusion Matrix with Outside Coloring:")
+fig, ax = plt.subplots(figsize=(8, 6))  # Adjust figure size as needed
 
-    # Set custom background colors
-    fig.patch.set_facecolor('#f0f0f5')  # Light grey background for the figure
-    ax.set_facecolor('#e6e6ff')         # Light blue background for the axes area outside the matrix
+# Set custom background colors for the figure and axes
+fig.patch.set_facecolor('#f0f0f5')  # Light grey background for the figure
+ax.set_facecolor('#e6e6ff')         # Light blue background for the axes area outside the matrix
 
-    # Normalize the confusion matrix if required (optional)
-    normalized_cm = cm / cm.sum(axis=1, keepdims=True)  # Row-wise normalization for percentages
+# Normalize the confusion matrix if required
+normalized_cm = cm / cm.sum(axis=1, keepdims=True)  # Row-wise normalization for percentages
 
-    # Plot heatmap
-    sns.heatmap(
-        normalized_cm, 
-        annot=True,
-        fmt=".2f",            # Show percentages
-        cmap="coolwarm",       # Colormap for the matrix
-        cbar=True,
-        square=True,
-        linewidths=0.5,        # Borders between the squares
-        linecolor='black',     # Border color for squares
-        xticklabels=np.unique(y), 
-        yticklabels=np.unique(y), 
-        ax=ax                  # Use the customized axes
-    )
+# Plot heatmap
+sns.heatmap(
+    normalized_cm, 
+    annot=True,
+    fmt=".2f",              # Show percentages
+    cmap="coolwarm",        # Colormap for the matrix
+    cbar=True,
+    square=True,
+    linewidths=0.5,         # Borders between the squares
+    linecolor='black',      # Border color for squares
+    xticklabels=np.unique(y), 
+    yticklabels=np.unique(y), 
+    ax=ax                   # Use the customized axes
+)
 
-    # Styling for title, labels, and colorbar
-    ax.set_xlabel("Predicted Labels", fontsize=12, fontweight="bold", color="black")
-    ax.set_ylabel("True Labels", fontsize=12, fontweight="bold", color="black")
-    ax.set_title(f"Customized Confusion Matrix", fontsize=14, fontweight="bold", color="black")
+# Styling for title, labels, and colorbar
+ax.set_xlabel("Predicted Labels", fontsize=12, fontweight="bold", color="black")
+ax.set_ylabel("True Labels", fontsize=12, fontweight="bold", color="black")
+ax.set_title(f"Customized Confusion Matrix", fontsize=14, fontweight="bold", color="black")
 
-    # Add additional padding outside the axes if needed
-    fig.tight_layout(pad=3)
+# Tight layout without additional padding
+plt.subplots_adjust(left=0, right=1, top=1, bottom=0)  # Remove surrounding margins completely
 
-    # Display the plot
-    st.pyplot(fig)
-else:
-    st.error("Either the ranked features or the target variable is missing. Please check the data preparation step.")
+# Display the plot
+st.pyplot(fig)
