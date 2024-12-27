@@ -74,10 +74,8 @@ else:
     st.write("### Correlation Heatmap")
 
     # Set up matplotlib figure
-    plt.figure(figsize=(12, 8))
-
-    # Create heatmap
-    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5, cbar_kws={"shrink": .8})
+    correlation_plot = drought_df_measures.corr()
+    correlation_plot.style.background_gradient(cmap = 'RdYlGn')
 
     # Set title and labels
     plt.title("Correlation Heatmap of Selected Features")
