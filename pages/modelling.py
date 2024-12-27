@@ -88,8 +88,8 @@ ax.set_xticks(np.arange(n_classes + 1), minor=True)
 ax.set_yticks(np.arange(n_classes + 1), minor=True)
 
 # Configure grid and labels
-ax.set_xticklabels(classes, fontsize=12, fontweight="bold", color="black")
-ax.set_yticklabels(classes, fontsize=12, fontweight="bold", color="black")
+ax.set_xticklabels(classes, fontsize=12, fontweight="bold", color="white")
+ax.set_yticklabels(classes, fontsize=12, fontweight="bold", color="white")
 ax.xaxis.tick_top()  # Move the x-axis labels to the top
 ax.xaxis.set_label_position('top')
 ax.tick_params(axis='both', which='both', length=0)  # Hide tick marks
@@ -118,7 +118,6 @@ for i in range(n_classes):
 # Label titles
 ax.set_xlabel("Predicted Labels", fontsize=12, fontweight="bold", color="red", labelpad=20)
 ax.set_ylabel("True Labels", fontsize=12, fontweight="bold", color="red", labelpad=20)
-ax.set_title("Confusion Matrix", fontsize=14, fontweight="bold", color="black", pad=20)
 
 # Tight layout
 plt.subplots_adjust(left=0.2, right=0.9, top=0.9, bottom=0.2)
