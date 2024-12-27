@@ -69,5 +69,5 @@ if submit_button:
     )
     drought_levels = ["No Drought", "Mild Drought", "Moderate Drought", "Severe Drought"]
     st.subheader("Prediction Result")
-    st.write(f"Drought Level: **{drought_levels[prediction]}**")
+    st.write("Drought Level:", drought_levels[prediction])
 
