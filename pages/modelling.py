@@ -130,6 +130,6 @@ plt.subplots_adjust(left=0.2, right=0.9, top=0.9, bottom=0.2)
 st.pyplot(fig)
 
 # Display the classification report
-    st.write("Classification Report:")
-    report = classification_report(y_test, y_pred, target_names=[str(c) for c in classes])
-    st.text(report)
+st.write("### Classification Report:")
+report = classification_report(y_test, y_pred, target_names=[str(c) for c in classes])
+st.text(report)
