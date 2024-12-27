@@ -71,8 +71,8 @@ st.write("### Customized Confusion Matrix (Dynamic Color Based on Values):")
 fig, ax = plt.subplots(figsize=(5, 5))  # Adjust figure size as needed
 
 # Set custom background colors for the figure and axes
-fig.patch.set_facecolor("#808080")  # Background color for the figure
-ax.set_facecolor("#808080")         # Background color for the axes
+fig.patch.set_facecolor("#bebebe")  # Background color for the figure
+ax.set_facecolor("#bebebe")         # Background color for the axes
 
 # Number of classes
 classes = np.unique(y)
