@@ -155,3 +155,20 @@ else:
     feature_rank_table = feature_rank_table.sort_values('Rank')
     st.write("### Features Sorted by Rank:")
     st.write(feature_rank_table)
+
+    # Button to remove non-ranked 1 features and save the filtered dataset
+    if st.button("Remove Non-Rank 1 Features"):
+        # Remove the non-rank 1 features from the dataset
+        filtered_df = independent_variables[selected_features]
+        
+        # Display the filtered dataframe
+        st.write("### Filtered Dataframe with Only Rank 1 Features")
+        st.write(filtered_df)
+        
+        # Save the filtered dataframe in session state for later use
+        st.session_state["filtered_df"] = filtered_df
+
+        st.success("Non-rank 1 features removed successfully!")
+
+    else:
+        st.write("Click the button to remove features with rank higher than 1.")
