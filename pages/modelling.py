@@ -79,7 +79,7 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
     # Display the confusion matrix
     cm = confusion_matrix(y_test, y_pred)
     fig, ax = plt.subplots(figsize=(5, 3))  # Adjust figure size as needed
-
+    fig.patch.set_alpha(0) 
     # Normalizing the values to create dynamic coloring (scaling between 0 and 1)
     normalized_cm = cm / cm.max()
     n_classes = len(classes)
