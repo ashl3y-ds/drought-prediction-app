@@ -116,9 +116,9 @@ for i in range(n_classes):
                 ha="center", va="center", fontsize=12, color="black")
 
 # Label titles
-ax.set_xlabel("Predicted Labels", fontsize=12, fontweight="bold", color="black", labelpad=20)
-ax.set_ylabel("True Labels", fontsize=12, fontweight="bold", color="black", labelpad=20)
-ax.set_title("Customized Confusion Matrix", fontsize=14, fontweight="bold", color="black", pad=20)
+ax.set_xlabel("Predicted Labels", fontsize=12, fontweight="bold", color="red", labelpad=20)
+ax.set_ylabel("True Labels", fontsize=12, fontweight="bold", color="red", labelpad=20)
+ax.set_title("Confusion Matrix", fontsize=14, fontweight="bold", color="black", pad=20)
 
 # Tight layout
 plt.subplots_adjust(left=0.2, right=0.9, top=0.9, bottom=0.2)
