@@ -26,7 +26,7 @@ scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
 # Train Random Forest Model
-model = RandomForestClassifier(n_estimators=100, random_state=42)
+model = DecisionTreeClassifier()
 model.fit(X_scaled, y)
 
 # Prediction function
