@@ -2,6 +2,10 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.feature_selection import RFE
 
 # Check if the combined data is available
 if "combined_df" not in st.session_state:
@@ -107,3 +111,49 @@ else:
 
     # Display the plot in Streamlit
     st.pyplot(plt)
+
+
+# Check if the independent variables and target are saved in session state
+if 'independent_variables' not in st.session_state or 'target' not in st.session_state:
+    st.error("Please load and preprocess the data first on the previous pages.")
+else:
+    # Load the saved independent variables and target variable
+    independent_variables = st.session_state["independent_variables"]
+    target = st.session_state["target"]
+
+    # Streamlit title
+    st.title("Feature Selection with RFE (Recursive Feature Elimination)")
+
+    # Perform train-test split (80% train, 20% test)
+    X_train, X_test, y_train, y_test = train_test_split(independent_variables, target, test_size=0.2, random_state=0)
+    
+    # Scale the features
+    sc = StandardScaler()
+    X_train = sc.fit_transform(X_train)
+    X_test = sc.transform(X_test)
+
+    # Create and fit the RandomForest model
+    model = RandomForestClassifier(n_estimators=10, random_state=0)
+    rfe = RFE(model, n_features_to_select=16)  # Trial and error for n_features_to_select
+    
+    # Fit RFE on the training data
+    fit = rfe.fit(X_train, y_train)
+
+    # Display the results
+    st.write(f"### Selected Features:")
+    selected_features = independent_variables.columns[fit.support_].to_list()
+    st.write(f"Selected Features: {selected_features}")
+    
+    st.write(f"### Feature Ranking:")
+    st.write(fit.ranking_)
+
+    st.write(f"### Number of Features Selected: {fit.n_features_}")
+    
+    # Optionally, show the rank of all features to show how well each was ranked for selection
+    feature_rank_table = pd.DataFrame({
+        'Feature': independent_variables.columns,
+        'Rank': fit.ranking_
+    })
+    feature_rank_table = feature_rank_table.sort_values('Rank')
+    st.write("### Features Sorted by Rank:")
+    st.write(feature_rank_table)
