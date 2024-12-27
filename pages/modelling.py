@@ -92,17 +92,25 @@ ax.xaxis.set_label_position('top')
 ax.tick_params(axis='both', which='both', length=0)  # Hide tick marks
 
 # Customize appearance
-ax.grid(False)  # Turn off grid by default
-ax.grid(True, which="minor", color="black", linewidth=1)  # Show gridlines around cells
+ax.grid(False)  # Turn off the default grid
+ax.grid(True, which="minor", color="black", linewidth=1)  # Add gridlines around cells
 ax.set_xlim(0, n_classes)
 ax.set_ylim(n_classes, 0)
 
-# Add the confusion matrix values as text
+# Add alternating background colors for the cells (light blue and white)
 for i in range(n_classes):
     for j in range(n_classes):
-        color = "white" if cm[i, j] > cm.max() / 2 else "black"  # Adjust text color
-        ax.text(j + 0.5, i + 0.5, str(cm[i, j]), 
-                ha="center", va="center", fontsize=12, color=color)
+        facecolor = "#ADD8E6" if (i + j) % 2 == 0 else "#FFFFFF"  # Alternate between light blue and white
+        rect = plt.Rectangle(
+            (j, i), 1, 1, facecolor=facecolor, edgecolor='black', linewidth=1
+        )
+        ax.add_patch(rect)
+
+        # Add text (values) to the cells
+        ax.text(
+            j + 0.5, i + 0.5, str(cm[i, j]), 
+            ha="center", va="center", fontsize=12, color="black"
+        )
 
 # Label titles
 ax.set_xlabel("Predicted Labels", fontsize=12, fontweight="bold", color="black", labelpad=20)
