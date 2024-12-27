@@ -144,8 +144,6 @@ else:
     selected_features = independent_variables.columns[fit.support_].to_list()
     st.write(f"Selected Features: {selected_features}")
     
-    st.write(f"### Feature Ranking:")
-    st.write(fit.ranking_)
 
     st.write(f"### Number of Features Selected: {fit.n_features_}")
     
