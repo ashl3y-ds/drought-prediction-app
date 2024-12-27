@@ -70,7 +70,7 @@ def predict_drought_level(ps, qv2m, t2m, t2mdew, t2mwet, t2m_max, t2m_min, t2m_r
     print(f"Raw prediction value: {prediction}")  # Debugging output
     return prediction
 
-drought_levels = ["No Drought", "Mild Drought", "Moderate Drought", "Severe Drought"]  # Define drought levels
+drought_levels = ["No Drought", "Mild Drought", "Moderate Drought", "Severe Drought","Disaster Drought"]  # Define drought levels
 
 # Predict and display result in the Streamlit app
 if submit_button:
