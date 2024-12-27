@@ -121,7 +121,7 @@ ax.set_ylabel("True Labels", fontsize=12, fontweight="bold", color="black", labe
 ax.set_title("Customized Confusion Matrix", fontsize=14, fontweight="bold", color="black", pad=20)
 
 # Tight layout
-plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1)
+plt.subplots_adjust(left=0.9, right=0.9, top=0.9, bottom=0.1)
 
 # Display the plot
 st.pyplot(fig)
