@@ -10,7 +10,7 @@ def remove_outliers(df, features):
     return df
 
 # Load the dataset
-drought_df = load_data()
+drought_df = combined_df
 
 # Exclude specific columns
 columns_to_exclude = ["date", "fips", "score", "day", "month", "year"]
