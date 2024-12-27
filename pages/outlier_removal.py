@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 # Check if the combined data is available
 if "combined_df" not in st.session_state:
@@ -44,3 +46,41 @@ else:
         st.session_state["cleaned_df"] = cleaned_df
     else:
         st.write("No outliers removed yet.")
+
+
+# Assuming you have the combined_df data in Streamlit's session state
+if 'combined_df' not in st.session_state:
+    st.error("Please load the data first on the Read Data page.")
+
+else:
+    # List of features to calculate correlation
+    measures_column_list = ['PRECTOT', 'PS', 'QV2M', 'T2M', 'T2MDEW', 'T2MWET', 'T2M_MAX', 'T2M_MIN', 'T2M_RANGE',
+                            'TS', 'WS10M', 'WS10M_MAX', 'WS10M_MIN', 'WS10M_RANGE', 'WS50M', 'WS50M_MAX', 'WS50M_MIN', 'WS50M_RANGE']
+
+    # Load the dataframe
+    combined_df = st.session_state["combined_df"]
+
+    # Calculate correlation matrix
+    correlation_matrix = combined_df[measures_column_list].corr()
+
+    # Streamlit title
+    st.title("Feature Correlation Analysis")
+
+    # Display correlation matrix text as a table
+    st.write("### Correlation Matrix")
+    st.write(correlation_matrix)
+
+    # Create a heatmap plot of the correlation matrix
+    st.write("### Correlation Heatmap")
+
+    # Set up matplotlib figure
+    plt.figure(figsize=(12, 8))
+
+    # Create heatmap
+    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5, cbar_kws={"shrink": .8})
+
+    # Set title and labels
+    plt.title("Correlation Heatmap of Selected Features")
+
+    # Display the plot in Streamlit
+    st.pyplot(plt)
