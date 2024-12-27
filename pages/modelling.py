@@ -124,20 +124,22 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
     st.write(f"### {algorithm} Classification Report:")
     st.dataframe(report_df.style.format(precision=2))
 
-    # Button to show comparison of all models' reports
-    if st.button("Show Comparison of All Models"):
+    # Button to show comparison of model accuracies
+    if st.button("Compare Model Accuracies"):
+        # Only proceed if we have more than one model
         if len(st.session_state["model_reports"]) > 1:
-            # Combine all classification reports for comparison
-            comparison_df = pd.DataFrame()
+            # Extract model names and accuracy scores
+            model_names = [report["model_name"] for report in st.session_state["model_reports"]]
+            accuracy_scores = [report["accuracy"] for report in st.session_state["model_reports"]]
 
-            for report in st.session_state["model_reports"]:
-                model_report = report["classification_report"]
-                model_name = report["model_name"]
-                model_report["Model"] = model_name
-                comparison_df = pd.concat([comparison_df, model_report])
+            # Create a bar plot for model comparison
+            fig, ax = plt.subplots(figsize=(10, 6))
+            ax.barh(model_names, accuracy_scores, color='skyblue')
+            ax.set_xlabel('Accuracy (%)', fontsize=14, fontweight="bold")
+            ax.set_ylabel('Models', fontsize=14, fontweight="bold")
+            ax.set_title('Comparison of Model Accuracies', fontsize=16, fontweight="bold")
 
-            # Display the comparison dataframe
-            st.write("### Comparison of Models' Classification Reports:")
-            st.dataframe(comparison_df.style.format(precision=2))
+            # Display the plot in Streamlit
+            st.pyplot(fig)
         else:
             st.write("Please train more than one model to see the comparison.")
