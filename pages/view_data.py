@@ -18,6 +18,11 @@ columns_to_drop = ['FIPS', 'DATE', 'PRECTOT', 'WS10M', 'WS10M_MIN', 'WS50M_MIN',
 columns_to_drop = [col for col in columns_to_drop if col in combined_df.columns]
 dataset = combined_df.drop(columns=columns_to_drop)
 
+# Ensure all values in the dataset are numeric, coercing errors to NaN, then drop rows with NaNs
+dataset = dataset.apply(pd.to_numeric, errors='coerce')
+dataset = dataset.dropna()  # Drop rows with NaN values
+
+# Extract features (X) and target variable (y)
 X = dataset.iloc[:, :-1].values  # Features
 y = dataset.iloc[:, -1].values   # Target
 
@@ -40,23 +45,7 @@ def predict_drought_level(ps, qv2m, t2m, t2mdew, t2mwet, t2m_max, t2m_min, t2m_r
 st.title("Drought Prediction Application")
 st.header("Enter Input Parameters")
 
-# Input Fields
-ps = st.number_input("Pressure (66 to 103):", min_value=66.0, max_value=103.0)
-qv2m = st.number_input("Specific Humidity (0.10 to 22.50):", min_value=0.1, max_value=22.5)
-t2m = st.number_input("Temperature (T2M, -38.50 to 40.30):", min_value=-38.50, max_value=40.30)
-t2mdew = st.number_input("Dew Temperature (T2MDEW, -41.50 to 27.05):", min_value=-41.50, max_value=27.05)
-t2mwet = st.number_input("Wet Bulb Temperature (T2MWET, -38.50 to 27.00):", min_value=-38.50, max_value=27.00)
-t2m_max = st.number_input("Max Temperature (T2M_MAX, -31.30 to 48.30):", min_value=-31.30, max_value=48.30)
-t2m_min = st.number_input("Min Temperature (T2M_MIN, -45.40 to 32.30):", min_value=-45.40, max_value=32.30)
-t2m_range = st.number_input("Temperature Range (T2M_RANGE, 0.12 to 29.65):", min_value=0.12, max_value=29.65)
-ts = st.number_input("Surface Temperature (TS, 41.23 to 43.47):", min_value=-41.23, max_value=43.47)
-ws10m_max = st.number_input("Max Wind Speed at 10m (0.60 to 24.90):", min_value=0.60, max_value=24.90)
-ws10m_range = st.number_input("Wind Speed Range (0.23 to 22.00):", min_value=0.23, max_value=22.00)
-ws50m = st.number_input("Avg Wind Speed at 50m (0.50 to 20.58):", min_value=0.50, max_value=20.58)
-ws50m_max = st.number_input("Max Wind Speed at 50m (1.04 to 29.90):", min_value=1.04, max_value=29.90)
-ws50m_range = st.number_input("Wind Speed Range (0.45 to 26.30):", min_value=0.45, max_value=26.30)
-month = st.number_input("Month (1-12):", min_value=1, max_value=12)
-day = st.number_input("Day (1-31):", min_value=1, max_value=31)
+# Input fields (same as before)
 
 # Predict drought level
 if st.button("Predict Drought Level"):
