@@ -71,7 +71,7 @@ st.write("Confusion Matrix:")
 fig, ax = plt.subplots(figsize=(5, 3))  # Adjust figure size as needed
 
 # Set custom background colors for the figure and axes
-fig.patch.set_facecolor("#2a2a2a")  # Background color for the figure
+fig.patch.set_facecolor("#a9a9a9")  # Background color for the figure
       # Background color for the axes
 
 # Number of classes
