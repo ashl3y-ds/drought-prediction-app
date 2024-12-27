@@ -20,6 +20,7 @@ def load_and_combine_data():
 combined_df = load_and_combine_data()
 st.success("Datasets loaded and combined successfully!")
 
+combined_df['score'] = combined_df['score'].fillna(0).astype(int)
 # Display the combined dataframe
 st.write(combined_df)
 
