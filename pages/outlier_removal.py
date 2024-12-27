@@ -1,14 +1,6 @@
 import streamlit as st
 import pandas as pd
 
-# Load and combine the datasets
-@st.cache_data
-def load_data():
-    df1 = pd.read_csv("data/cleaned_drought_data_part1.csv")  # Replace with your file
-    df2 = pd.read_csv("data/cleaned_drought_data_part2.csv")  # Replace with your file
-    combined_df = pd.concat([df1, df2], ignore_index=True)
-    return combined_df
-
 # Outlier Removal Function
 def remove_outliers(df, features):
     for feature in features:
@@ -20,16 +12,22 @@ def remove_outliers(df, features):
 # Load the dataset
 drought_df = load_data()
 
+# Exclude specific columns
+columns_to_exclude = ["date", "fips", "score", "day", "month", "year"]
+numeric_features = [
+    col for col in drought_df.columns 
+    if col not in columns_to_exclude and pd.api.types.is_numeric_dtype(drought_df[col])
+]
+
 # Streamlit UI
 st.title("Outlier Removal for Dataset Features")
 st.write("This page allows you to remove outliers using the 3-sigma rule for selected features.")
 
 # Dropdown for selecting features to clean
-all_features = drought_df.columns.tolist()
 selected_features = st.multiselect(
-    "Select Features for Outlier Removal (Default: All Features):", 
-    options=all_features, 
-    default=all_features
+    "Select Features for Outlier Removal (Default: All Eligible Features):", 
+    options=numeric_features, 
+    default=numeric_features
 )
 
 # Remove outliers on button click
