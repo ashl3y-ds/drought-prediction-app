@@ -29,6 +29,10 @@ color_by = st.selectbox(
     options=["None"] + list(combined_df.columns)
 )
 
+# Custom Template (Apply a style to the plot)
+# Choose a Matplotlib template style (you can choose others like 'seaborn', 'ggplot', etc.)
+plt.style.use('seaborn-darkgrid')  # This is the custom style you can choose
+
 # Generate Scatter Plot
 if x_feature and y_feature:
     st.write(f"### Scatter Plot: {x_feature} vs. {y_feature}")
@@ -43,18 +47,25 @@ if x_feature and y_feature:
             combined_df[x_feature], 
             combined_df[y_feature], 
             c=combined_df[color_by].astype('category').cat.codes,
-            cmap=colormap, alpha=0.7
+            cmap=colormap, alpha=0.7, edgecolors='w', s=100, marker='o'  # Customize appearance of points
         )
         cbar = plt.colorbar(scatter, ax=ax, ticks=range(len(unique_values)))
         cbar.ax.set_yticklabels(unique_values)
         cbar.set_label(color_by)
     else:
-        ax.scatter(combined_df[x_feature], combined_df[y_feature], alpha=0.7, color='blue')
+        ax.scatter(
+            combined_df[x_feature], 
+            combined_df[y_feature], 
+            alpha=0.7, color='blue', edgecolors='w', s=100, marker='o'  # Customize appearance of points
+        )
 
-    # Labeling
-    ax.set_xlabel(x_feature)
-    ax.set_ylabel(y_feature)
-    ax.set_title(f"Scatter Plot: {x_feature} vs. {y_feature}")
+    # Labeling with custom fonts, styles, and fontsize
+    ax.set_xlabel(x_feature, fontsize=12, fontweight='bold')
+    ax.set_ylabel(y_feature, fontsize=12, fontweight='bold')
+    ax.set_title(f"Scatter Plot: {x_feature} vs. {y_feature}", fontsize=14, fontweight='bold')
+
+    # Adding grid lines and changing their color
+    ax.grid(True, which='both', color='gray', linestyle='--', linewidth=0.5)
 
     # Display in Streamlit
     st.pyplot(fig)
