@@ -143,7 +143,7 @@ st.write("### Classification Report:")
 st.dataframe(formatted_report_df)
 
     # Button to show comparison of all models' reports
-    if st.button("Show Comparison of All Models"):
+    st.button("Show Comparison of All Models"):
         if len(st.session_state["model_reports"]) > 1:
             # Combine all classification reports for comparison
             comparison_df = pd.dataframe()
