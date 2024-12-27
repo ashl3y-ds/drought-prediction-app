@@ -8,3 +8,4 @@ plotly
 scipy
 scikit-learn
 seaborn
+pickle
