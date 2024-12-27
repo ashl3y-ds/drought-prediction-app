@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 
@@ -30,43 +29,39 @@ color_by = st.selectbox(
     options=["None"] + list(combined_df.columns)
 )
 
-# Custom Template (Apply a style to the plot)
-# Choose a Matplotlib template style (you can choose others like 'seaborn', 'ggplot', etc.)
-plt.style.use('seaborn-darkgrid')  # This is the custom style you can choose
+# Custom Style (manual customization)
+# Customize the plot colors and background
+fig, ax = plt.subplots()
 
-# Generate Scatter Plot
-if x_feature and y_feature:
-    st.write(f"### Scatter Plot: {x_feature} vs. {y_feature}")
-    fig, ax = plt.subplots()
+if color_by != "None":
+    unique_values = combined_df[color_by].unique()
+    colors = plt.cm.get_cmap('viridis', len(unique_values)).colors
+    colormap = ListedColormap(colors)
+    scatter = ax.scatter(
+        combined_df[x_feature], 
+        combined_df[y_feature], 
+        c=combined_df[color_by].astype('category').cat.codes,
+        cmap=colormap, alpha=0.7, edgecolors='w', s=100, marker='o'  # Customize appearance of points
+    )
+    cbar = plt.colorbar(scatter, ax=ax, ticks=range(len(unique_values)))
+    cbar.ax.set_yticklabels(unique_values)
+    cbar.set_label(color_by)
+else:
+    ax.scatter(
+        combined_df[x_feature], 
+        combined_df[y_feature], 
+        alpha=0.7, color='blue', edgecolors='w', s=100, marker='o'  # Customize appearance of points
+    )
 
-    # Scatter plot with color logic
-    if color_by != "None":
-        unique_values = combined_df[color_by].unique()
-        colors = plt.cm.get_cmap('viridis', len(unique_values)).colors
-        colormap = ListedColormap(colors)
-        scatter = ax.scatter(
-            combined_df[x_feature], 
-            combined_df[y_feature], 
-            c=combined_df[color_by].astype('category').cat.codes,
-            cmap=colormap, alpha=0.7, edgecolors='w', s=100, marker='o'  # Customize appearance of points
-        )
-        cbar = plt.colorbar(scatter, ax=ax, ticks=range(len(unique_values)))
-        cbar.ax.set_yticklabels(unique_values)
-        cbar.set_label(color_by)
-    else:
-        ax.scatter(
-            combined_df[x_feature], 
-            combined_df[y_feature], 
-            alpha=0.7, color='blue', edgecolors='w', s=100, marker='o'  # Customize appearance of points
-        )
+# Apply custom background and style to grid, labels
+ax.set_facecolor('#f2f2f2')  # Light grey background
+ax.set_xlabel(x_feature, fontsize=12, fontweight='bold', color='black')
+ax.set_ylabel(y_feature, fontsize=12, fontweight='bold', color='black')
+ax.set_title(f"Scatter Plot: {x_feature} vs. {y_feature}", fontsize=14, fontweight='bold', color='black')
 
-    # Labeling with custom fonts, styles, and fontsize
-    ax.set_xlabel(x_feature, fontsize=12, fontweight='bold')
-    ax.set_ylabel(y_feature, fontsize=12, fontweight='bold')
-    ax.set_title(f"Scatter Plot: {x_feature} vs. {y_feature}", fontsize=14, fontweight='bold')
+# Grid styling
+ax.grid(True, which='both', color='gray', linestyle='--', linewidth=0.5)
 
-    # Adding grid lines and changing their color
-    ax.grid(True, which='both', color='gray', linestyle='--', linewidth=0.5)
+# Show plot
+st.pyplot(fig)
 
-    # Display in Streamlit
-    st.pyplot(fig)
