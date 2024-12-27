@@ -127,12 +127,13 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
     metric = st.selectbox("Select Metric to Compare", ["Precision", "Recall", "F1-Score", "Accuracy"])
 
     # Button to show comparison of model accuracies or other metrics
-    if st.button("Compare Model Metrics"):
-        # Only proceed if we have more than one model
-        if len(st.session_state["model_reports"]) > 1:
-            # Extract model names and selected metric scores
-            model_names = [report["model_name"] for report in st.session_state["model_reports"]]
-            metric_scores = []
+# Button to show comparison of model accuracies or other metrics
+if st.button("Compare Model Metrics"):
+    # Only proceed if we have more than one model
+    if len(st.session_state["model_reports"]) > 1:
+        # Extract model names and selected metric scores
+        model_names = [report["model_name"] for report in st.session_state["model_reports"]]
+        metric_scores = []
 
         # Dynamically extract the required metric from the report
         for report in st.session_state["model_reports"]:
@@ -147,19 +148,20 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
                 metric_scores.append(report["classification_report"].loc["weighted avg", "f1-score"] * 100)
             elif metric == "Accuracy":
                 # The accuracy is already stored separately in report
-                metric_scores.append(report["accuracy"])
-            # Create a histogram for model metric comparison
-            fig, ax = plt.subplots(figsize=(10, 6))
-            ax.hist(metric_scores, bins=len(st.session_state["model_reports"]), color='skyblue', edgecolor="black")
+                metric_scores.append(report["accuracy"] * 100)  # If you want it in percentage
 
-            # Customize histogram
-            ax.set_xlabel(f'{metric} Values', fontsize=14, fontweight="bold")
-            ax.set_ylabel('Frequency', fontsize=14, fontweight="bold")
-            ax.set_title(f'Histogram of {metric} Comparison Across Models', fontsize=16, fontweight="bold")
-            ax.set_xticks(np.arange(0, 101, 10))  # Adjust for the 0-100 scale (percentage)
-            ax.set_xlim([0, 100])
+        # Create a histogram for model metric comparison
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.hist(metric_scores, bins=len(st.session_state["model_reports"]), color='skyblue', edgecolor="black")
 
-            # Display the plot
-            st.pyplot(fig)
-        else:
-            st.write("Please train more than one model to see the comparison.")
+        # Customize histogram
+        ax.set_xlabel(f'{metric} Values (%)', fontsize=14, fontweight="bold")
+        ax.set_ylabel('Frequency', fontsize=14, fontweight="bold")
+        ax.set_title(f'Histogram of {metric} Comparison Across Models', fontsize=16, fontweight="bold")
+        ax.set_xticks(np.arange(0, 101, 10))  # Adjust for the 0-100 scale (percentage)
+        ax.set_xlim([0, 100])
+
+        # Display the plot
+        st.pyplot(fig)
+    else:
+        st.write("Please train more than one model to see the comparison.")
