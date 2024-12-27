@@ -2,31 +2,34 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 
-# Ensure the combined data is loaded into session state
-if "combined_df" in st.session_state:
-    # Access the combined dataframe from session state
-    combined_df = st.session_state["combined_df"]
-    
-    st.write("### Histogram of Numeric Columns")
+# Title
+st.title("Advanced Histogram Analysis")
 
-    # Get numeric columns
-    numeric_cols = combined_df.select_dtypes(include=['float64']).columns
+@st.cache_data
+def load_combined_data():
+    df1 = pd.read_csv("data/cleaned_drought_data_part1.csv")
+    df2 = pd.read_csv("data/cleaned_drought_data_part2.csv")
+    return pd.concat([df1, df2], ignore_index=True)
 
-    # Loop over numeric columns and plot histograms
-    for col in numeric_cols:
-        # Create a figure for the histogram
-        fig, ax = plt.subplots()
+df = load_combined_data()
 
-        # Plot histogram
-        ax.hist(combined_df[col], bins=20, density=True)
+# Feature selection
+feature = st.selectbox("Select a feature for analysis:", ['T2M', 'PRECTOT', 'score'])
 
-        # Set the labels and title
-        ax.set_xlabel(col)
-        ax.set_ylabel('Density')
-        ax.set_title(f'Distribution of {col}')
-        
-        # Display the plot in Streamlit
-        st.pyplot(fig)
-else:
-    st.error("No combined data available. Please upload the data first.")
+# Add threshold filtering
+threshold = st.slider(f"Filter {feature} (choose a threshold):", 
+                      min_value=float(df[feature].min()), 
+                      max_value=float(df[feature].max()),
+                      value=float(df[feature].mean()))
+
+# Filter dataset
+filtered_df = df[df[feature] >= threshold]
+
+# Plot histogram
+fig, ax = plt.subplots()
+ax.hist(filtered_df[feature], bins=20, density=True)
+ax.set_title(f"{feature} Distribution (Values ≥ {threshold})")
+ax.set_xlabel(feature)
+ax.set_ylabel('Density')
+st.pyplot(fig)
 
