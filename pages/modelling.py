@@ -1,13 +1,16 @@
 import streamlit as st
 import pandas as pd
-from sklearn import tree 
+import numpy as np
+from sklearn  import tree
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Ensure that both filtered features and target variable are available
 if "filtered_df" in st.session_state and "target" in st.session_state:
@@ -43,7 +46,7 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
     if algorithm == "Support Vector Machine (SVM)":
         model = SVC()
     elif algorithm == "Decision Tree":
-        model = tree.DecisionTreeClassifier(criterion='gini', max_depth=30)
+        model = DecisionTreeClassifier()
     elif algorithm == "K-Nearest Neighbors (KNN)":
         model = KNeighborsClassifier()
     elif algorithm == "Random Forest":
@@ -58,6 +61,26 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
     # Evaluate the model
     accuracy = accuracy_score(y_test, y_pred)
     st.write(f"Model accuracy: {accuracy * 100:.2f}%")
+
+    # Compute confusion matrix
+    cm = confusion_matrix(y_test, y_pred)
+
+    # Custom confusion matrix visualization
+    st.write("### Confusion Matrix:")
+    fig, ax = plt.subplots(figsize=(6, 4))
+    sns.heatmap(
+        cm,
+        annot=True,
+        fmt='d',
+        cmap='Blues',
+        xticklabels=np.unique(y),
+        yticklabels=np.unique(y),
+        cbar=False
+    )
+    ax.set_xlabel("Predicted Labels")
+    ax.set_ylabel("True Labels")
+    ax.set_title(f"Confusion Matrix for {algorithm}")
+    st.pyplot(fig)
 
 else:
     st.error("Either the ranked features or the target variable is missing. Please check the data preparation step.")
