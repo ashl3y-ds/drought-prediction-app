@@ -29,10 +29,14 @@ color_by = st.selectbox(
     options=["None"] + list(combined_df.columns)
 )
 
+# Get background color from Streamlit theme, default background is light grey (#f0f2f6)
+bg_color = "#f0f2f6"
+
 # Custom Style (manual customization)
 # Customize the plot colors and background
 fig, ax = plt.subplots(figsize=(10, 6))  # Set the figure size for better visualization
 
+# Plot points
 if color_by != "None":
     unique_values = combined_df[color_by].unique()
     colors = plt.cm.get_cmap('viridis', len(unique_values)).colors  # Color scheme 'viridis'
@@ -62,7 +66,7 @@ else:
     )
 
 # Apply custom background and style to grid, labels, title, and axes
-ax.set_facecolor('#f2f2f2')  # Light grey background
+ax.set_facecolor(bg_color)  # Match Streamlit app background
 ax.set_xlabel(x_feature, fontsize=12, fontweight='bold', color='black')  # X-axis label styling
 ax.set_ylabel(y_feature, fontsize=12, fontweight='bold', color='black')  # Y-axis label styling
 ax.set_title(f"Scatter Plot: {x_feature} vs. {y_feature}", fontsize=14, fontweight='bold', color='black')  # Title styling
@@ -84,4 +88,3 @@ ax.legend(loc='upper left', fontsize=10)  # Position the legend at the top-left
 
 # Show plot
 st.pyplot(fig)
-
