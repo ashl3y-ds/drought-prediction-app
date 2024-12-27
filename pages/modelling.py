@@ -130,6 +130,14 @@ plt.subplots_adjust(left=0.2, right=0.9, top=0.9, bottom=0.2)
 st.pyplot(fig)
 
 # Display the classification report
+report_dict = classification_report(y_test, y_pred, target_names=[str(c) for c in classes], output_dict=True)
+
+# Convert the dictionary to a pandas DataFrame
+report_df = pd.DataFrame(report_dict).transpose()
+
+# Format precision and recall to two decimal places
+formatted_report_df = report_df.style.format(precision=2)
+
+# Display the report in the Streamlit app
 st.write("### Classification Report:")
-report = classification_report(y_test, y_pred, target_names=[str(c) for c in classes])
-st.text(report)
+st.dataframe(formatted_report_df)
