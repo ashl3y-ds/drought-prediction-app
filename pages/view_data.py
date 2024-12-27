@@ -40,6 +40,7 @@ def predict_drought_level(ps, qv2m, t2m, t2mdew, t2mwet, t2m_max, t2m_min, t2m_r
 st.title("Drought Prediction Application")
 st.header("Enter Input Parameters")
 
+with st.form(key='drought_prediction_form'):
 # Input Fields
 ps = st.number_input("Pressure (66 to 103):", min_value=66.0, max_value=103.0)
 qv2m = st.number_input("Specific Humidity (0.10 to 22.50):", min_value=0.1, max_value=22.5)
@@ -58,9 +59,9 @@ ws50m_range = st.number_input("Wind Speed Range (0.45 to 26.30):", min_value=0.4
 month = st.number_input("Month (1-12):", min_value=1, max_value=12)
 day = st.number_input("Day (1-31):", min_value=1, max_value=31)
 
+submit_button = st.form_submit_button(label='Predict Drought Level')
+
 # Predict drought level
-if st.button("Predict Drought Level"):
-    prediction = predict_drought_level(ps, qv2m, t2m, t2mdew, t2mwet, t2m_max, t2m_min, t2m_range, ts, ws10m_max, ws10m_range, ws50m, ws50m_max, ws50m_range, month, day)
-    drought_levels = ["No Drought", "Mild Drought", "Moderate Drought", "Severe Drought"]
-    st.subheader("Prediction Result")
-    st.write(f"Drought Level: **{drought_levels[prediction]}**")
+if submit_button:
+    prediction = predict_drought_level(ps,qv2m,t2m,t2mdew,t2mwet,t2m_max,t2m_min,t2m_range,ts,ws10m_max,ws10m_range,ws50m,ws50m_max,ws50m_range,month,day)  # Add all required features
+    st.subheader(f"Drought Level: {drought_levels[prediction]}")
