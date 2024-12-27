@@ -42,7 +42,8 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
     if algorithm == "Support Vector Machine (SVM)":
         model = SVC()
     elif algorithm == "Decision Tree":
-        model = DecisionTreeClassifier()
+        model = tree.DecisionTreeClassifier(criterion='gini', max_depth=30)
+DT_classifier.fit(X_train,y_train) 
     elif algorithm == "K-Nearest Neighbors (KNN)":
         model = KNeighborsClassifier()
     elif algorithm == "Random Forest":
