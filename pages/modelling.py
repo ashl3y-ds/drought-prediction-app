@@ -44,7 +44,7 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
 
     # Train and evaluate model based on selection
     if algorithm == "Support Vector Machine (SVM)":
-        model = SVC()
+        model = SVC(kernel='linear', probability=True)
     elif algorithm == "Decision Tree":
         model = DecisionTreeClassifier()
     elif algorithm == "K-Nearest Neighbors (KNN)":
