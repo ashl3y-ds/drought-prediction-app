@@ -12,58 +12,56 @@ def load_and_combine_data():
     combined_df = pd.concat([df1, df2], ignore_index=True)
     return combined_df
 
-# Load and preprocess the dataset
+# Load combined dataset
 combined_df = load_and_combine_data()
-columns_to_drop = ['FIPS','DATE','PRECTOT','WS10M','WS10M_MIN','WS50M_MIN','YEAR']
-dataset = combined_df.drop(columns=columns_to_drop)
 
-# Ensure all values in the dataset are numeric, coercing errors to NaN
+# Clean column names
+combined_df.columns = combined_df.columns.str.strip()
+
+# Columns to drop
+columns_to_drop = ['FIPS', 'DATE', 'PRECTOT', 'WS10M', 'WS10M_MIN', 'WS50M_MIN', 'YEAR']
+
+# Check which columns are present and drop them if they exist
+existing_columns_to_drop = [col for col in columns_to_drop if col in combined_df.columns]
+dataset = combined_df.drop(columns=existing_columns_to_drop)
+
+# Ensure all values are numeric
 dataset = dataset.apply(pd.to_numeric, errors='coerce')
-dataset = dataset.dropna()  # Drop rows with NaN values
 
-# Extract features (X) and target variable (y)
+# Remove rows with NaN values
+dataset = dataset.dropna()
+
+# Extract features and target
 X = dataset.iloc[:, :-1].values  # Features
 y = dataset.iloc[:, -1].values   # Target
 
-# Check if X is 2D and print the shape
+# Check shape and handle NaNs or Inf values
 print("X shape:", X.shape)
-
-# Check for NaN or Inf values
-print("NaN values in X:", np.isnan(X).sum())
-print("Inf values in X:", np.isinf(X).sum())
-
-# Handle NaNs and Infinities if present
 X = np.nan_to_num(X)
 
-# Ensure X is 2D
-if X.ndim == 1:
-    X = X.reshape(-1, 1)
-
-# Scale features
+# Scale the features
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
-# Train Random Forest Model
+# Train the model
 model = RandomForestClassifier(n_estimators=100, random_state=42)
 model.fit(X_scaled, y)
 
-# Drought prediction function
+# Function to predict drought level
 def predict_drought_level(ps, qv2m, t2m, t2mdew, t2mwet, t2m_max, t2m_min, t2m_range, ts, ws10m_max, ws10m_range, ws50m, ws50m_max, ws50m_range, month, day):
     input_features = [ps, qv2m, t2m, t2mdew, t2mwet, t2m_max, t2m_min, t2m_range, ts, ws10m_max, ws10m_range, ws50m, ws50m_max, ws50m_range, month, day]
-    scaled_features = scaler.transform([input_features])  # Scale input features
-    prediction = model.predict(scaled_features)[0]  # Predict drought level
+    scaled_features = scaler.transform([input_features])
+    prediction = model.predict(scaled_features)[0]
     return prediction
 
-# Streamlit App
+# Streamlit app
 st.title("Drought Prediction Application")
 st.header("Enter Input Parameters")
 
-# Input fields (same as before)
+# Input fields for prediction (same as before)
 
-# Predict drought level
 if st.button("Predict Drought Level"):
     prediction = predict_drought_level(ps, qv2m, t2m, t2mdew, t2mwet, t2m_max, t2m_min, t2m_range, ts, ws10m_max, ws10m_range, ws50m, ws50m_max, ws50m_range, month, day)
     drought_levels = ["No Drought", "Mild Drought", "Moderate Drought", "Severe Drought"]
     st.subheader("Prediction Result")
     st.write(f"Drought Level: **{drought_levels[prediction]}**")
-
