@@ -18,7 +18,7 @@ def load_and_combine_data():
 combined_df = load_and_combine_data()
 
 columns_to_drop = ['FIPS', 'DATE', 'PRECTOT', 'WS10M', 'WS10M_MIN', 'WS50M_MIN', 'YEAR']
-dataset = dataset.drop(columns=columns_to_drop)
+dataset = combined_df.drop(columns=columns_to_drop)
 
 # Extract training features and target
 X = dataset.iloc[:, :-1].values  # Features (exclude the target column)
