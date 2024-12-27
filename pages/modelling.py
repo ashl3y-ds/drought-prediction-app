@@ -7,7 +7,7 @@ from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import matplotlib.pyplot as plt
 
 # Ensure required data is in session state
@@ -28,10 +28,11 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
     X_test = scaler.transform(X_test)
 
     # Save processed data back to session state
-    st.session_state["X_train"] = X_train
-    st.session_state["X_test"] = X_test
-    st.session_state["y_train"] = y_train
-    st.session_state["y_test"] = y_test
+    if "X_train" not in st.session_state:
+        st.session_state["X_train"] = X_train
+        st.session_state["X_test"] = X_test
+        st.session_state["y_train"] = y_train
+        st.session_state["y_test"] = y_test
 
     st.write(f"Number of training samples: {X_train.shape[0]}")
     st.write(f"Number of testing samples: {X_test.shape[0]}")
@@ -63,6 +64,9 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
     report_dict = classification_report(y_test, y_pred, target_names=[str(c) for c in classes], output_dict=True)
     report_df = pd.DataFrame(report_dict).transpose()
 
+    # Confusion matrix
+    cm = confusion_matrix(y_test, y_pred)
+
     # Check if the model has already been added
     existing_model_names = [report["model_name"] for report in st.session_state["model_reports"]]
     if algorithm not in existing_model_names:
@@ -70,18 +74,35 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
         st.session_state["model_reports"].append({
             "model_name": algorithm,
             "accuracy": accuracy * 100,
-            "classification_report": report_df
+            "classification_report": report_df,
+            "confusion_matrix": cm
         })
     else:
         st.warning(f"Model '{algorithm}' is already trained and saved. Train a new model or update existing models.")
 
-    # Select metric for comparison
+    # Display confusion matrix
+    st.write("### Confusion Matrix")
+    fig, ax = plt.subplots(figsize=(6, 4))
+    ax.matshow(cm, cmap='coolwarm', alpha=0.7)
+    for i in range(cm.shape[0]):
+        for j in range(cm.shape[1]):
+            ax.text(x=j, y=i, s=cm[i, j], ha='center', va='center', color='black')
+
+    plt.xlabel("Predicted Labels")
+    plt.ylabel("True Labels")
+    plt.title("Confusion Matrix")
+    st.pyplot(fig)
+
+    # Display classification report for the selected model
+    st.write(f"### {algorithm} Classification Report:")
+    st.dataframe(report_df.style.format(precision=2))
+
     metric = st.selectbox("Select Metric to Compare", ["Precision", "Recall", "F1-Score", "Accuracy"])
 
     # Compare model metrics
     if st.button("Compare Model Metrics"):
         if len(st.session_state["model_reports"]) > 1:
-            # Get unique models and metrics
+            # Extract unique models and metrics
             unique_model_reports = {
                 report["model_name"]: report
                 for report in st.session_state["model_reports"]
