@@ -70,7 +70,8 @@ def predict_drought_level(ps, qv2m, t2m, t2mdew, t2mwet, t2m_max, t2m_min, t2m_r
     print(f"Raw prediction value: {prediction}")  # Debugging output
     return prediction
 
-drought_levels = [1, 2, 3, 4,5]  # Define drought levels
+# Define drought levels (explicit levels)
+drought_levels = [1, 2, 3, 4, 5]
 
 # Predict and display result in the Streamlit app
 if submit_button:
@@ -80,8 +81,8 @@ if submit_button:
     )
     
     # Validate prediction
-    if prediction not in range(len(drought_levels)):
-        st.error("Prediction out of bounds. Please check the model or input data.")
+    if prediction not in drought_levels:  # Compare against `drought_levels`
+        st.error(f"Prediction out of bounds. Got '{prediction}', which is not a valid drought level.")
     else:
         st.subheader("Prediction Result")
-        st.write(f"Drought Level: **{drought_levels[prediction]}**")
+        st.write(f"Drought Level: **{prediction}**")  # Display result directly
