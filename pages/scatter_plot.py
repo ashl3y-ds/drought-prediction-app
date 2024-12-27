@@ -29,14 +29,16 @@ color_by = st.selectbox(
     options=["None"] + list(combined_df.columns)
 )
 
-# Get background color from Streamlit theme, default background is light grey (#f0f2f6)
-bg_color = "#f0f2f6"
+# Get the background color from Streamlit theme (default is light gray)
+bg_color = "#f0f2f6"  # Default light gray for the app background
 
-# Custom Style (manual customization)
-# Customize the plot colors and background
+# Create a figure with a larger size
 fig, ax = plt.subplots(figsize=(10, 6))  # Set the figure size for better visualization
 
-# Plot points
+# Ensure the figure background is transparent and matches Streamlit's background
+fig.patch.set_facecolor(bg_color)  # Set figure background to match app's background color
+fig.patch.set_alpha(0.0)  # Make the figure background transparent
+
 if color_by != "None":
     unique_values = combined_df[color_by].unique()
     colors = plt.cm.get_cmap('viridis', len(unique_values)).colors  # Color scheme 'viridis'
@@ -44,11 +46,11 @@ if color_by != "None":
     scatter = ax.scatter(
         combined_df[x_feature], 
         combined_df[y_feature], 
-        c=combined_df[color_by].astype('category').cat.codes,  # Assigning category codes to each color
+        c=combined_df[color_by].astype('category').cat.codes,  # Assign category codes to colors
         cmap=colormap, 
         alpha=0.7, 
-        edgecolors='w',  # White border around scatter points
-        s=100,  # Size of points
+        edgecolors='w',  # White border around points
+        s=100,  # Size of the points
         marker='o'  # Circle marker
     )
     cbar = plt.colorbar(scatter, ax=ax, ticks=range(len(unique_values)))
@@ -60,31 +62,35 @@ else:
         combined_df[y_feature], 
         alpha=0.7, 
         color='blue', 
-        edgecolors='w',  # White border
+        edgecolors='w',  # White border around points
         s=100,  # Set point size
         marker='o'  # Circle marker
     )
 
-# Apply custom background and style to grid, labels, title, and axes
-ax.set_facecolor(bg_color)  # Match Streamlit app background
-ax.set_xlabel(x_feature, fontsize=12, fontweight='bold', color='black')  # X-axis label styling
-ax.set_ylabel(y_feature, fontsize=12, fontweight='bold', color='black')  # Y-axis label styling
+# Apply custom background color and style for the plot area
+ax.set_facecolor(bg_color)  # Plot background color
+ax.set_xlabel(x_feature, fontsize=12, fontweight='bold', color='black')  # X-axis label
+ax.set_ylabel(y_feature, fontsize=12, fontweight='bold', color='black')  # Y-axis label
 ax.set_title(f"Scatter Plot: {x_feature} vs. {y_feature}", fontsize=14, fontweight='bold', color='black')  # Title styling
 
-# Customize the grid style (light dashed lines for better contrast)
-ax.grid(True, which='both', color='gray', linestyle='--', linewidth=0.5)  # Gridline styling
+# Customize grid style (light dashed lines for better contrast)
+ax.grid(True, which='both', color='gray', linestyle='--', linewidth=0.5)  # Subtle gridlines
 
 # Customize tick labels (optional)
 for tick in ax.get_xticklabels():
     tick.set_fontsize(10)
     tick.set_color('darkgray')
-    
+
 for tick in ax.get_yticklabels():
     tick.set_fontsize(10)
     tick.set_color('darkgray')
 
-# Customize the legend (color mapping) and plot readability
-ax.legend(loc='upper left', fontsize=10)  # Position the legend at the top-left
+# Remove the top and right spines (optional, cleaner plot)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
 
-# Show plot
+# Adjust layout to ensure everything fits without a white border
+plt.tight_layout()
+
+# Display the plot in Streamlit
 st.pyplot(fig)
