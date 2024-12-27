@@ -62,25 +62,39 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
     accuracy = accuracy_score(y_test, y_pred)
     st.write(f"Model accuracy: {accuracy * 100:.2f}%")
 
-    # Compute confusion matrix
-    cm = confusion_matrix(y_test, y_pred)
+ # Custom confusion matrix visualization
+st.write("### Customized Confusion Matrix with Outside Coloring:")
+fig, ax = plt.subplots(figsize=(8, 6))  # Adjust figure size as needed
 
-    # Custom confusion matrix visualization
-    st.write("### Confusion Matrix:")
-    fig, ax = plt.subplots(figsize=(6, 4))
-    sns.heatmap(
-        cm,
-        annot=True,
-        fmt='d',
-        cmap='Blues',
-        xticklabels=np.unique(y),
-        yticklabels=np.unique(y),
-        cbar=False
-    )
-    ax.set_xlabel("Predicted Labels")
-    ax.set_ylabel("True Labels")
-    ax.set_title(f"Confusion Matrix for {algorithm}")
-    st.pyplot(fig)
+# Set custom background colors
+fig.patch.set_facecolor('#f0f0f5')  # Light grey background for the figure
+ax.set_facecolor('#e6e6ff')         # Light blue background for the axes area outside the matrix
 
-else:
-    st.error("Either the ranked features or the target variable is missing. Please check the data preparation step.")
+# Normalize the confusion matrix if required (optional)
+normalized_cm = cm / cm.sum(axis=1)[:, np.newaxis]  # Row-wise normalization for percentages
+
+# Plot heatmap
+sns.heatmap(
+    cm, 
+    annot=True,
+    fmt='d',               # Raw values format
+    cmap="coolwarm",        # Colormap for the matrix
+    cbar=True,
+    square=True,
+    linewidths=0.5,         # Borders between the squares
+    linecolor='black',      # Border color for squares
+    xticklabels=np.unique(y),
+    yticklabels=np.unique(y),
+    ax=ax                   # Use the customized axes
+)
+
+# Styling for title, labels, and colorbar
+ax.set_xlabel("Predicted Labels", fontsize=12, fontweight="bold", color="black")
+ax.set_ylabel("True Labels", fontsize=12, fontweight="bold", color="black")
+ax.set_title(f"Customized Confusion Matrix", fontsize=14, fontweight="bold", color="black")
+
+# Add additional padding outside the axes if needed
+fig.tight_layout(pad=3)
+
+# Display the plot
+st.pyplot(fig)
