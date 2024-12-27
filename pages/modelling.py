@@ -68,7 +68,7 @@ if "filtered_df" in st.session_state and "target" in st.session_state:
     cm = confusion_matrix(y_test, y_pred)
 
 st.write("### Customized Confusion Matrix (No Heatmap):")
-fig, ax = plt.subplots(figsize=(8, 6))  # Adjust figure size as needed
+fig, ax = plt.subplots(figsize=(8, 7))  # Adjust figure size as needed
 
 # Set custom background colors for the figure and axes
 fig.patch.set_facecolor("#808080")  # Background color for the figure
