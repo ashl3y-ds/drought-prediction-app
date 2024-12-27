@@ -1,3 +1,41 @@
+import pandas as pd
+import streamlit as st
+from sklearn.preprocessing import StandardScaler
+from sklearn.tree import DecisionTreeClassifier
+
+# Load the dataset
+@st.cache_data
+def load_and_combine_data():
+    df1 = pd.read_csv("data/cleaned_drought_data_part1.csv")
+    df2 = pd.read_csv("data/cleaned_drought_data_part2.csv")
+    combined_df = pd.concat([df1, df2], ignore_index=True)
+    return combined_df
+
+# Load and preprocess the dataset
+combined_df = load_and_combine_data()
+
+columns_to_drop = ['fips', 'date', 'PRECTOT', 'WS10M', 'WS10M_MIN', 'WS50M_MIN', 'year']
+columns_to_drop = [col for col in columns_to_drop if col in combined_df.columns]
+dataset = combined_df.drop(columns=columns_to_drop)
+
+X = dataset.iloc[:, :-1].values  # Features
+y = dataset.iloc[:, -1].values   # Target
+
+# Scale features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Train Random Forest Model
+model = DecisionTreeClassifier()
+model.fit(X_scaled, y)
+
+# Prediction function
+def predict_drought_level(ps, qv2m, t2m, t2mdew, t2mwet, t2m_max, t2m_min, t2m_range, ts, ws10m_max, ws10m_range, ws50m, ws50m_max, ws50m_range, month, day):
+    input_features = [ps, qv2m, t2m, t2mdew, t2mwet, t2m_max, t2m_min, t2m_range, ts, ws10m_max, ws10m_range, ws50m, ws50m_max, ws50m_range, month, day]
+    scaled_features = scaler.transform([input_features])  # Scale input features
+    prediction = model.predict(scaled_features)[0]  # Predict drought level
+    return prediction
+
 # Streamlit App
 st.title("Drought Prediction Application")
 st.header("Enter Input Parameters")
