@@ -84,7 +84,7 @@ with st.form(key='drought_prediction_form'):
     submit_button = st.form_submit_button(label='Predict Drought Level')
 
 # Define drought levels (explicit levels)
-drought_levels = [1, 2, 3, 4, 5]
+drought_levels = dataset[target].values
 
 # Predict and display result in the Streamlit app
 if submit_button:
