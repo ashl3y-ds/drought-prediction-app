@@ -82,44 +82,40 @@ n_classes = len(classes)
 normalized_cm = cm / cm.max()
 
 # Draw grid for the matrix
+# Configure grid and labels
 ax.set_xticks(np.arange(n_classes) + 0.5, minor=False)
 ax.set_yticks(np.arange(n_classes) + 0.5, minor=False)
 ax.set_xticks(np.arange(n_classes + 1), minor=True)
 ax.set_yticks(np.arange(n_classes + 1), minor=True)
+ax.set_xticklabels(classes, fontsize=12, fontweight="bold", color="yellow")
+ax.set_yticklabels(classes, fontsize=12, fontweight="bold", color="yellow")
+ax.xaxis.tick_top()  # Move x-axis labels to the top
+ax.xaxis.set_label_position("top")
+ax.tick_params(axis="both", which="both", length=0)  # Hide tick marks
 
-# Configure grid and labels
-ax.set_xticklabels(classes, fontsize=12, fontweight="bold", color="white")
-ax.set_yticklabels(classes, fontsize=12, fontweight="bold", color="white")
-ax.xaxis.tick_top()  # Move the x-axis labels to the top
-ax.xaxis.set_label_position('top')
-ax.tick_params(axis='both', which='both', length=0)  # Hide tick marks
-
-# Customize appearance
-ax.grid(False)  # Turn off the default grid
-ax.grid(True, which="minor", color="black", linewidth=1)  # Add gridlines around cells
+# Customize gridlines for cells
+ax.grid(False)
+ax.grid(True, which="minor", color="gray", linewidth=1)
 ax.set_xlim(0, n_classes)
 ax.set_ylim(n_classes, 0)
 
-# Add dynamic background colors and text
+# Add dynamic cell colors and values
 for i in range(n_classes):
     for j in range(n_classes):
-        # Compute a color intensity based on the value
-        intensity = normalized_cm[i, j]
-        color = plt.cm.Blues(intensity)  # Use Blues colormap to assign colors
-
-        # Draw the cell rectangle with dynamic color
-        rect = plt.Rectangle((j, i), 1, 1, facecolor=color, edgecolor="black")
+        intensity = normalized_cm[i, j]  # Compute color intensity
+        yellow_shade = (1.0, 1.0, 0.6 + intensity / 3, 1.0)  # Dynamic yellow shade
+        rect = plt.Rectangle((j, i), 1, 1, facecolor=yellow_shade, edgecolor="gray")
         ax.add_patch(rect)
 
-        # Add the value as text (always in black)
-        ax.text(j + 0.5, i + 0.5, str(cm[i, j]), 
-                ha="center", va="center", fontsize=12, color="black")
+        # Add value text in the matrix box
+        ax.text(j + 0.5, i + 0.5, str(cm[i, j]), ha="center", va="center", 
+                fontsize=12, color="black", fontweight="bold")
 
-# Label titles
+# Labeling
 ax.set_xlabel("Predicted Labels", fontsize=12, fontweight="bold", color="red", labelpad=20)
 ax.set_ylabel("True Labels", fontsize=12, fontweight="bold", color="red", labelpad=20)
 
-# Tight layout
+# Adjust layout for spacing
 plt.subplots_adjust(left=0.2, right=0.9, top=0.9, bottom=0.2)
 
 # Display the plot
