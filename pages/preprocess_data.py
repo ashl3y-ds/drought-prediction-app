@@ -132,6 +132,16 @@ else:
     X_train = sc.fit_transform(X_train)
     X_test = sc.transform(X_test)
 
+        # Save the split and scaled data
+    with open('split_scaled_data.pkl', 'wb') as f:
+        pickle.dump({
+            "X_train": X_train_scaled,
+            "X_test": X_test_scaled,
+            "y_train": y_train,
+            "y_test": y_test,
+            "scaler": scaler
+        }, f)
+
     # Create and fit the RandomForest model
     model = RandomForestClassifier(n_estimators=10, random_state=0)
     rfe = RFE(model, n_features_to_select=16)  # Trial and error for n_features_to_select
