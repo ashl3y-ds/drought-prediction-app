@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
 
 # Load the dataset
 @st.cache_data
@@ -14,26 +15,47 @@ def load_and_combine_data():
 # Load and preprocess the dataset
 combined_df = load_and_combine_data()
 
+# Drop unnecessary columns and define features explicitly
 columns_to_drop = ['fips', 'date', 'PRECTOT', 'WS10M', 'WS10M_MIN', 'WS50M_MIN', 'year']
 columns_to_drop = [col for col in columns_to_drop if col in combined_df.columns]
 dataset = combined_df.drop(columns=columns_to_drop)
 
-X = dataset.iloc[:, :-1].values  # Features
-y = dataset["score"].values    # Target
+# Define features and target explicitly
+features = [
+    "ps", "qv2m", "t2m", "t2mdew", "t2mwet", "t2m_max", "t2m_min",
+    "t2m_range", "ts", "ws10m_max", "ws10m_range", "ws50m",
+    "ws50m_max", "ws50m_range", "month", "day"
+]
+target = "score"
+
+# Ensure only valid columns exist in the dataset
+features = [f for f in features if f in dataset.columns]
+
+X = dataset[features].values  # Features
+y = dataset[target].values   # Target
 
 # Scale features
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
-# Train Random Forest Model
+# Split dataset into training and testing subsets
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+
+# Train Decision Tree Model
 model = DecisionTreeClassifier()
-model.fit(X_scaled, y)
+model.fit(X_train, y_train)
+
+# Evaluate the model
+accuracy = model.score(X_test, y_test)
+print(f"Model Accuracy: {accuracy:.2f}")
 
 # Prediction function
 def predict_drought_level(ps, qv2m, t2m, t2mdew, t2mwet, t2m_max, t2m_min, t2m_range, ts, ws10m_max, ws10m_range, ws50m, ws50m_max, ws50m_range, month, day):
     input_features = [ps, qv2m, t2m, t2mdew, t2mwet, t2m_max, t2m_min, t2m_range, ts, ws10m_max, ws10m_range, ws50m, ws50m_max, ws50m_range, month, day]
     scaled_features = scaler.transform([input_features])  # Scale input features
     prediction = model.predict(scaled_features)[0]  # Predict drought level
+    print(f"Input Features: {input_features}")  # Debugging step
+    print(f"Predicted Level: {prediction}")  # Debugging step
     return prediction
 
 # Streamlit App
@@ -61,15 +83,6 @@ with st.form(key='drought_prediction_form'):
 
     submit_button = st.form_submit_button(label='Predict Drought Level')
 
-# Prediction function
-def predict_drought_level(ps, qv2m, t2m, t2mdew, t2mwet, t2m_max, t2m_min, t2m_range, ts, ws10m_max, ws10m_range, ws50m, ws50m_max, ws50m_range, month, day):
-    input_features = [ps, qv2m, t2m, t2mdew, t2mwet, t2m_max, t2m_min, t2m_range, ts, ws10m_max, ws10m_range, ws50m, ws50m_max, ws50m_range, month, day]
-    scaled_features = scaler.transform([input_features])
-    prediction = model.predict(scaled_features)[0]  # Predict drought level
-
-    print(f"Raw prediction value: {prediction}")  # Debugging output
-    return prediction
-
 # Define drought levels (explicit levels)
 drought_levels = [1, 2, 3, 4, 5]
 
@@ -85,4 +98,4 @@ if submit_button:
         st.error(f"Prediction out of bounds. Got '{prediction}', which is not a valid drought level.")
     else:
         st.subheader("Prediction Result")
-        st.write(f"Drought Level: **{prediction}**")  # Display result directly
+        st.write(f"Drought Level: **{prediction}**")
