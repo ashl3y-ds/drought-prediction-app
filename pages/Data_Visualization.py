@@ -85,26 +85,26 @@ def generate_heatmap(data):
     if not numerical_data.empty:
         corr_matrix = numerical_data.corr()
 
-        # Set up a larger figure with a different style
+        # Set up a larger figure with a black background and brighter colors
         fig, ax = plt.subplots(figsize=(16, 12))  # Increased figure size
-        ax.set_facecolor((0, 0, 0, 0))
+        ax.set_facecolor('black')  # Set background color to black
         fig.patch.set_alpha(0.0)
 
-        # Enhanced color palette and annotations
+        # Enhanced color palette and annotations with dark background in mind
         sns.heatmap(
             corr_matrix,
             annot=True,
             fmt=".2f",
-            cmap="YlGnBu",  # More vibrant colors
+            cmap="magma",  # Use a bright and high-contrast colormap like magma
             cbar=True,
             square=True,
             linewidths=0.5,
             ax=ax,
-            annot_kws={"size": 14, "weight": "bold", "color": "black"},  # Larger and bolder text
+            annot_kws={"size": 14, "weight": "bold", "color": "white"},  # White text for annotations
             cbar_kws={"label": "Correlation Coefficient", 'shrink': 0.8}  # Color bar label and shrink size
         )
         
-        ax.set_title("Feature Correlation Heatmap", fontsize=16, fontweight='bold', color='darkred')
+        ax.set_title("Feature Correlation Heatmap", fontsize=16, fontweight='bold', color='white')
         st.pyplot(fig)
     else:
         st.error("No numerical data available to compute correlations.")
