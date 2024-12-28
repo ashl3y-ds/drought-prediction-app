@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from matplotlib.colors import LinearSegmentedColormap  # Ensure this import exists
+
 
 @st.cache_data
 def load_data():
@@ -70,7 +70,7 @@ def generate_line_graph(data):
     else:
         st.error("Unable to generate trend visualization. Ensure the dataset includes valid time-related data.")
 
-
+from matplotlib.colors import LinearSegmentedColormap  # Ensure this import exists
 def generate_heatmap(data):
     st.title("Heatmap of Correlation Analysis")
     st.write("This heatmap displays the correlation between all numerical features in the dataset.")
