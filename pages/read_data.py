@@ -34,7 +34,7 @@ rounded_score_counts = combined_df['score'].round().value_counts()
 st.write(rounded_score_counts)
 
 # Show descriptive statistics for numeric columns
-st.write("### Descriptive Statistics (Numeric Columns)")
+st.write("Descriptive Statistics (Numeric Columns)")
 st.write(combined_df.describe())
 
 # Save combined data to session state for later use
