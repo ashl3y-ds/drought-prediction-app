@@ -1,3 +1,8 @@
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap
+
 @st.cache_data
 def load_data():
     df1 = pd.read_csv("data/cleaned_drought_data_part1.csv")  # Replace with your file path
