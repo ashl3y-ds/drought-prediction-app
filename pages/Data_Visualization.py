@@ -90,8 +90,8 @@ def generate_heatmap(data):
             'blue_to_green', ['#0000FF', '#00FF00']  # Transition from blue to green
         )
 
-        # Set up a much larger figure for an enhanced size (20x larger than default)
-        fig, ax = plt.subplots(figsize=(80, 72))  # Increased figure size (20x larger than default)
+        # Set up a much larger figure for an enhanced size
+        fig, ax = plt.subplots(figsize=(40, 36))  # Increased figure size (10x larger than default)
         ax.set_facecolor('black')  # Set background color to black
         fig.patch.set_alpha(0.0)
 
@@ -105,7 +105,7 @@ def generate_heatmap(data):
             square=True,
             linewidths=2,  # Thicker line separating cells for more prominence
             ax=ax,
-            annot_kws={"size": 60, "weight": "bold", "color": "#FF0000"},  # Red text for annotation
+            annot_kws={"size": 40, "weight": "bold", "color": "#FFFFFF"},  # Larger, bold white text
             cbar_kws={"label": "Correlation Coefficient", 'shrink': 0.75},  # Shrink the color bar slightly
             xticklabels=corr_matrix.columns,  # Show feature names on both axes
             yticklabels=corr_matrix.columns,  # Show feature names on both axes
@@ -114,11 +114,11 @@ def generate_heatmap(data):
         # Make cells bigger and adjust tick positions
         ax.set_xticks(np.arange(len(corr_matrix.columns)) + 0.5)  # Moves ticks closer to center of cells
         ax.set_yticks(np.arange(len(corr_matrix.columns)) + 0.5)  # Moves ticks closer to center of cells
-        ax.set_xticklabels(corr_matrix.columns, fontsize=56, fontweight='bold', color='red')  # Red font for labels
-        ax.set_yticklabels(corr_matrix.columns, fontsize=56, fontweight='bold', color='red')  # Red font for labels
+        ax.set_xticklabels(corr_matrix.columns, fontsize=28, fontweight='bold', color='white')  # Increase font size for labels
+        ax.set_yticklabels(corr_matrix.columns, fontsize=28, fontweight='bold', color='white')  # Increase font size for labels
 
         # Title with a larger and bold font size
-        ax.set_title("Feature Correlation Heatmap", fontsize=72, fontweight='bold', color='red')
+        ax.set_title("Feature Correlation Heatmap", fontsize=36, fontweight='bold', color='white')
 
         # Display the plot
         st.pyplot(fig)
