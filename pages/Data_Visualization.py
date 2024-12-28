@@ -42,7 +42,7 @@ def generate_scatter_plot(data):
     st.pyplot(fig)
 
 # Function to generate line graph
-def generate_line_graph(data):
+def generate_line_graph():
     st.title("Line Graph for Feature Trends Over Time")
     feature = st.selectbox("Select a Feature for Trend Visualization", options=data.columns, key="line_feature")
     
@@ -122,4 +122,4 @@ else:
     generate_line_graph(combined_df)
     
     # Display heatmap
-    generate_correlation_heatmap(combined_df)
+    generate_correlation_heatmap()
