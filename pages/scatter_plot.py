@@ -28,7 +28,6 @@ else:
     st.title("Scatter Plot to Display the Relationship Between Two Variables")
     st.write("Choose the features to plot. The points will be colored based on the 'score' column.")
 
-
     # Dropdowns for user to select X-axis and Y-axis features
     x_feature = st.selectbox("Select X-axis Feature", options=combined_df.columns)
     y_feature = st.selectbox("Select Y-axis Feature", options=combined_df.columns)
@@ -46,10 +45,17 @@ else:
         edgecolors='w',
         s=100
     )
-    plt.colorbar(scatter, ax=ax).set_label("Score")
-    ax.set_xlabel(x_feature)
-    ax.set_ylabel(y_feature)
-    ax.set_title(f"Scatter Plot: {x_feature} vs. {y_feature} (Colored by Score)")
+    plt.colorbar(scatter, ax=ax).set_label("Score", fontsize=12, fontweight='bold', color='red')
+    ax.set_xlabel(x_feature, fontsize=12, fontweight='bold', color='red')
+    ax.set_ylabel(y_feature, fontsize=12, fontweight='bold', color='red')
+    ax.set_title(f"Scatter Plot: {x_feature} vs. {y_feature} (Colored by Score)", fontsize=14, fontweight='bold', color='red')
+
+    # Customize tick labels for visibility
+    for label in ax.get_xticklabels():
+        label.set_color('red')
+    for label in ax.get_yticklabels():
+        label.set_color('red')
+
     st.pyplot(fig)
 
     # Line Graph: Feature Trends Over Time
@@ -64,13 +70,20 @@ else:
 
         # Plot line graph
         fig, ax = plt.subplots(figsize=(10, 6))
-        fig.patch.set_alpha(0.0)  
+        fig.patch.set_alpha(0.0)
         ax.plot(trend.index, trend.values, marker='o', color='blue', linestyle='-', linewidth=2)
-        ax.set_title(f"Average {feature} by Month", fontsize=14)
-        ax.set_xlabel("Month", fontsize=12)
-        ax.set_ylabel(f"{feature} (Average)", fontsize=12)
+        ax.set_title(f"Average {feature} by Month", fontsize=14, fontweight='bold', color='red')
+        ax.set_xlabel("Month", fontsize=12, fontweight='bold', color='red')
+        ax.set_ylabel(f"{feature} (Average)", fontsize=12, fontweight='bold', color='red')
         ax.set_xticks(range(1, 13))  # Show all 12 months on the x-axis
         ax.grid(visible=True, linestyle='--', linewidth=0.5, color='gray')
+
+        # Customize tick labels for visibility
+        for label in ax.get_xticklabels():
+            label.set_color('red')
+        for label in ax.get_yticklabels():
+            label.set_color('red')
+
         st.pyplot(fig)
     else:
         st.error("Unable to generate trend visualization. Ensure the dataset includes valid time-related data.")
