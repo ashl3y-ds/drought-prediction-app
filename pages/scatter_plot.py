@@ -70,6 +70,7 @@ else:
 
         # Plot line graph
         fig, ax = plt.subplots(figsize=(10, 6))
+        ax.set_facecolor((0, 0, 0, 0))  # Make axes background fully transparent
         fig.patch.set_alpha(0.0)
         ax.plot(trend.index, trend.values, marker='o', color='blue', linestyle='-', linewidth=2)
         ax.set_title(f"Average {feature} by Month", fontsize=14, fontweight='bold', color='red')
