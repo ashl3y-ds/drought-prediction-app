@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+from matplotlib.colors import LinearSegmentedColormap
 
 @st.cache_data
 def load_data():
