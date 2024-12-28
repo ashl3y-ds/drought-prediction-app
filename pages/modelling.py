@@ -12,8 +12,6 @@ import matplotlib.pyplot as plt
 
 # Ensure required data is in session state
 if "filtered_df" in st.session_state and "target" in st.session_state:
-    st.write("### Ranked Data Preview:")
-    st.write(st.session_state["filtered_df"].head())
 
     # Load features and target variable
     X = st.session_state["filtered_df"]
