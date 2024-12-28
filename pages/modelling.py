@@ -17,9 +17,10 @@ def load_data():
     return cleaned_df
 
 # Load data
-combined_df = load_data()
+cleaned_df = load_data()
+
 # Ensure required data is in session state
-if "filtered_df" in st.session_state and "target" in st.session_state:
+if "score" in cleaned_df.columns:
 
     # Load features and target variable
     X = st.session_state["filtered_df"]
