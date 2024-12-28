@@ -29,13 +29,13 @@ else:
     st.write("Choose the features to plot. The points will be colored based on the 'score' column.")
 
 
-    fig.patch.set_alpha(0.0)  
     # Dropdowns for user to select X-axis and Y-axis features
     x_feature = st.selectbox("Select X-axis Feature", options=combined_df.columns)
     y_feature = st.selectbox("Select Y-axis Feature", options=combined_df.columns)
 
     # Scatter Plot
     fig, ax = plt.subplots(figsize=(10, 6))
+    fig.patch.set_alpha(0.0)
     scores = combined_df['score']
     scatter = ax.scatter(
         combined_df[x_feature],
@@ -64,6 +64,7 @@ else:
 
         # Plot line graph
         fig, ax = plt.subplots(figsize=(10, 6))
+        fig.patch.set_alpha(0.0)  
         ax.plot(trend.index, trend.values, marker='o', color='blue', linestyle='-', linewidth=2)
         ax.set_title(f"Average {feature} by Month", fontsize=14)
         ax.set_xlabel("Month", fontsize=12)
