@@ -85,26 +85,32 @@ def generate_heatmap(data):
     if not numerical_data.empty:
         corr_matrix = numerical_data.corr()
 
-        # Set up a larger figure with a black background and brighter colors
-        fig, ax = plt.subplots(figsize=(16, 12))  # Increased figure size
+        # Set up a larger figure with a black background and improved color contrast
+        fig, ax = plt.subplots(figsize=(16, 12))  # Larger figure size
         ax.set_facecolor('black')  # Set background color to black
         fig.patch.set_alpha(0.0)
 
-        # Enhanced color palette and annotations with dark background in mind
+        # Enhanced color palette and annotations
         sns.heatmap(
             corr_matrix,
             annot=True,
             fmt=".2f",
-            cmap="magma",  # Use a bright and high-contrast colormap like magma
+            cmap="coolwarm",  # Bright and contrasting colormap
             cbar=True,
             square=True,
-            linewidths=0.5,
+            linewidths=1.0,  # Make line separating squares thicker
             ax=ax,
-            annot_kws={"size": 14, "weight": "bold", "color": "white"},  # White text for annotations
-            cbar_kws={"label": "Correlation Coefficient", 'shrink': 0.8}  # Color bar label and shrink size
+            annot_kws={"size": 16, "weight": "bold", "color": "#F5F5F5"},  # Light gray text for visibility
+            cbar_kws={"label": "Correlation Coefficient", 'shrink': 0.8},  # Color bar label and shrink size
+            xticklabels=corr_matrix.columns,  # Show feature names on both axes
+            yticklabels=corr_matrix.columns  # Show feature names on both axes
         )
         
-        ax.set_title("Feature Correlation Heatmap", fontsize=16, fontweight='bold', color='white')
+        # Increase the size of the cells
+        ax.set_xticks(range(len(corr_matrix.columns)))
+        ax.set_yticks(range(len(corr_matrix.columns)))
+        
+        ax.set_title("Feature Correlation Heatmap", fontsize=18, fontweight='bold', color='white')
         st.pyplot(fig)
     else:
         st.error("No numerical data available to compute correlations.")
