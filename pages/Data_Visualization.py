@@ -70,7 +70,7 @@ def generate_line_graph(data):
     else:
         st.error("Unable to generate trend visualization. Ensure the dataset includes valid time-related data.")
 
-from matplotlib.colors import LinearSegmentedColormap  # Ensure this import exists
+
 def generate_heatmap(data):
     st.title("Heatmap of Correlation Analysis")
     st.write("This heatmap displays the correlation between all numerical features in the dataset.")
