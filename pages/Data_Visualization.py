@@ -69,7 +69,7 @@ def generate_line_graph():
         st.error("Unable to generate trend visualization. Ensure the dataset includes valid time-related data.")
 
 # Function to generate a heatmap
-def generate_correlation_heatmap():
+def generate_correlation_heatmap(data):
     st.subheader("Heatmap for Correlation Analysis")
     
     # Filter out non-numerical columns
@@ -122,4 +122,4 @@ else:
     generate_line_graph(combined_df)
     
     # Display heatmap
-    generate_correlation_heatmap()
+    generate_correlation_heatmap(combined_df)
