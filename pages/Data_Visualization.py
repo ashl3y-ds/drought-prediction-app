@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 @st.cache_data
 def load_data():
@@ -42,7 +43,7 @@ def generate_scatter_plot(data):
     st.pyplot(fig)
 
 # Function to generate line graph
-def generate_line_graph():
+def generate_line_graph(data):
     st.title("Line Graph for Feature Trends Over Time")
     feature = st.selectbox("Select a Feature for Trend Visualization", options=data.columns, key="line_feature")
     
@@ -68,20 +69,22 @@ def generate_line_graph():
     else:
         st.error("Unable to generate trend visualization. Ensure the dataset includes valid time-related data.")
 
-# Function to generate a heatmap
-def generate_correlation_heatmap(data):
-    st.subheader("Heatmap for Correlation Analysis")
+# Function to generate heatmap for correlation analysis
+# Function to generate heatmap for correlation analysis
+def generate_heatmap(data):
+    st.title("Heatmap of Correlation Analysis")
+    st.write("This heatmap displays the correlation between all numerical features in the dataset.")
     
-    # Filter out non-numerical columns
-    numerical_data = data.select_dtypes(include=["float64", "int64"])
+    # List of features to exclude from correlation analysis
+    exclude_features = ['date', 'fips', 'day', 'month', 'year']
     
-    if numerical_data.empty:
-        st.error("The dataset does not contain any numerical features to calculate correlations.")
-    else:
-        # Calculate the correlation matrix
+    # Remove excluded features
+    numerical_data = data.drop(columns=[col for col in exclude_features if col in data.columns])
+    numerical_data = numerical_data.select_dtypes(include=["float64", "int64"])
+
+    if not numerical_data.empty:
         corr_matrix = numerical_data.corr()
-        
-        # Create the heatmap
+
         fig, ax = plt.subplots(figsize=(12, 8))
         sns.heatmap(
             corr_matrix,
@@ -91,19 +94,14 @@ def generate_correlation_heatmap(data):
             cbar=True,
             square=True,
             linewidths=0.5,
-            annot_kws={"size": 8, "weight": "bold", "color": "black"},
+            ax=ax
         )
-        ax.set_title("Correlation Heatmap", fontsize=14, fontweight="bold", color="red")
-        
-        # Customizing axis labels
-        ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha="right", fontsize=10, color="red")
-        ax.set_yticklabels(ax.get_yticklabels(), rotation=0, fontsize=10, color="red")
-        
+        ax.set_title("Feature Correlation Heatmap", fontsize=14, fontweight='bold', color='red')
         st.pyplot(fig)
-
+    else:
+        st.error("No numerical data available to compute correlations.")
 # Main app logic
 combined_df = load_data()
-
 if 'date' in combined_df.columns:
     combined_df['date'] = pd.to_datetime(combined_df['date'])
     combined_df['month'] = combined_df['date'].dt.month
@@ -113,13 +111,11 @@ else:
 if "score" not in combined_df.columns:
     st.error("The dataset does not contain a 'score' column. Please ensure the data includes this column.")
 else:
-    st.title("Drought Data Visualizations")
+    visualization_choice = st.radio("Select Visualization Type", ["Scatter Plot", "Line Graph", "Heatmap"])
 
-    # Display scatter plot
-    generate_scatter_plot(combined_df)
-    
-    # Display line graph
-    generate_line_graph(combined_df)
-    
-    # Display heatmap
-    generate_correlation_heatmap(combined_df)
+    if visualization_choice == "Scatter Plot":
+        generate_scatter_plot(combined_df)
+    elif visualization_choice == "Line Graph":
+        generate_line_graph(combined_df)
+    elif visualization_choice == "Heatmap":
+        generate_heatmap(combined_df)
