@@ -85,31 +85,34 @@ def generate_heatmap(data):
     if not numerical_data.empty:
         corr_matrix = numerical_data.corr()
 
-        # Set up a larger figure with a black background and improved color contrast
+        # Set up a larger figure with a black background and purple-pink colormap
         fig, ax = plt.subplots(figsize=(16, 12))  # Larger figure size
         ax.set_facecolor('black')  # Set background color to black
         fig.patch.set_alpha(0.0)
 
-        # Enhanced color palette and annotations
+        # Using a purple-pink gradient color palette
+        purple_pink_cmap = plt.cm.Spectral  # A good purple-pink transition colormap
+
+        # Plot heatmap with the customized color scheme
         sns.heatmap(
             corr_matrix,
             annot=True,
             fmt=".2f",
-            cmap="coolwarm",  # Bright and contrasting colormap
+            cmap=purple_pink_cmap,  # Purple-pink colormap
             cbar=True,
             square=True,
-            linewidths=1.0,  # Make line separating squares thicker
+            linewidths=1.0,  # Thicker line separating cells
             ax=ax,
             annot_kws={"size": 16, "weight": "bold", "color": "#F5F5F5"},  # Light gray text for visibility
             cbar_kws={"label": "Correlation Coefficient", 'shrink': 0.8},  # Color bar label and shrink size
             xticklabels=corr_matrix.columns,  # Show feature names on both axes
             yticklabels=corr_matrix.columns  # Show feature names on both axes
         )
-        
+
         # Increase the size of the cells
         ax.set_xticks(range(len(corr_matrix.columns)))
         ax.set_yticks(range(len(corr_matrix.columns)))
-        
+
         ax.set_title("Feature Correlation Heatmap", fontsize=18, fontweight='bold', color='white')
         st.pyplot(fig)
     else:
