@@ -86,6 +86,8 @@ def generate_heatmap(data):
         corr_matrix = numerical_data.corr()
 
         fig, ax = plt.subplots(figsize=(12, 8))
+        ax.set_facecolor((0, 0, 0, 0))
+        fig.patch.set_alpha(0.0)
         sns.heatmap(
             corr_matrix,
             annot=True,
