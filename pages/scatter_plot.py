@@ -28,6 +28,8 @@ else:
     st.title("Scatter Plot to Display the Relationship Between Two Variables")
     st.write("Choose the features to plot. The points will be colored based on the 'score' column.")
 
+
+    fig.patch.set_alpha(0.0)  
     # Dropdowns for user to select X-axis and Y-axis features
     x_feature = st.selectbox("Select X-axis Feature", options=combined_df.columns)
     y_feature = st.selectbox("Select Y-axis Feature", options=combined_df.columns)
