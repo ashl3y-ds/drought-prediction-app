@@ -23,8 +23,8 @@ cleaned_df = load_data()
 if "score" in cleaned_df.columns:
 
     # Load features and target variable
-    X = st.session_state["filtered_df"]
-    y = st.session_state["target"]
+    X = cleaned_df.drop(["score"]
+    y = cleaned_df.["score"]
 
     # Split data
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
