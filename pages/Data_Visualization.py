@@ -73,23 +73,55 @@ def generate_line_graph(data):
 def generate_heatmap(data):
     st.title("Heatmap of Correlation Analysis")
     st.write("This heatmap displays the correlation between all numerical features in the dataset.")
-    numerical_data = data.select_dtypes(include=["float64", "int64"])
+    
+    # List of features to exclude from correlation analysis
+    exclude_features = ['date', 'fips', 'day', 'month', 'year']
+    
+    # Remove excluded features
+    numerical_data = data.drop(columns=[col for col in exclude_features if col in data.columns])
+    numerical_data = numerical_data.select_dtypes(include=["float64", "int64"])
 
     if not numerical_data.empty:
         corr_matrix = numerical_data.corr()
 
-        fig, ax = plt.subplots(figsize=(12, 8))
+        # Create a custom neon colormap that transitions between bright neon colors
+        neon_cmap = LinearSegmentedColormap.from_list(
+            'neon', ['#39FF14', '#FF073A', '#00FFFF', '#F1C40F', '#FF1493', '#8A2BE2']
+        )
+
+        # Set up a larger figure with a black background
+        fig, ax = plt.subplots(figsize=(20, 18))  # Increased figure size for larger matrix
+        ax.set_facecolor('black')  # Set background color to black
+        fig.patch.set_alpha(0.0)
+
+        # Plot heatmap with neon colors
         sns.heatmap(
             corr_matrix,
             annot=True,
             fmt=".2f",
-            cmap="coolwarm",
+            cmap=neon_cmap,  # Using neon colormap
             cbar=True,
             square=True,
-            linewidths=0.5,
-            ax=ax
+            linewidths=1.2,  # Thicker line separating cells
+            ax=ax,
+            annot_kws={"size": 20, "weight": "bold", "color": "#000000"},  # Dark text for neon contrast
+            cbar_kws={"label": "Correlation Coefficient", 'shrink': 0.8},  # Color bar label and shrink size
+            xticklabels=corr_matrix.columns,  # Show feature names on both axes
+            yticklabels=corr_matrix.columns  # Show feature names on both axes
         )
-        ax.set_title("Feature Correlation Heatmap", fontsize=14, fontweight='bold', color='red')
+
+        # Increase the size of the cells further by adjusting tick spacing
+        ax.set_xticks(range(len(corr_matrix.columns)))
+        ax.set_yticks(range(len(corr_matrix.columns)))
+
+        # Adjust the font size of the axis labels
+        ax.set_xticklabels(corr_matrix.columns, fontsize=16, fontweight='bold', color='white')
+        ax.set_yticklabels(corr_matrix.columns, fontsize=16, fontweight='bold', color='white')
+
+        # Title with a larger font size
+        ax.set_title("Feature Correlation Heatmap", fontsize=22, fontweight='bold', color='white')
+
+        # Display the plot
         st.pyplot(fig)
     else:
         st.error("No numerical data available to compute correlations.")
