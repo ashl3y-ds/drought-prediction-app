@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.colors import ListedColormap
 
 @st.cache_data
 def load_data():
@@ -10,36 +9,20 @@ def load_data():
     combined_df = pd.concat([df1, df2], ignore_index=True)
     return combined_df
 
-# Load data
-combined_df = load_data()
-
-# Convert 'date' column to datetime format (ensure the 'date' column exists in the dataset)
-if 'date' in combined_df.columns:
-    combined_df['date'] = pd.to_datetime(combined_df['date'])
-    combined_df['month'] = combined_df['date'].dt.month
-else:
-    st.error("The dataset must include a 'date' column for time-based visualizations.")
-
-# Check if "score" column exists
-if "score" not in combined_df.columns:
-    st.error("The dataset does not contain a 'score' column. Please ensure the data includes this column.")
-else:
-    # Scatter Plot Generator
+# Function to generate scatter plot
+def generate_scatter_plot(data):
     st.title("Scatter Plot to Display the Relationship Between Two Variables")
     st.write("Choose the features to plot. The points will be colored based on the 'score' column.")
+    x_feature = st.selectbox("Select X-axis Feature", options=data.columns, key="scatter_x")
+    y_feature = st.selectbox("Select Y-axis Feature", options=data.columns, key="scatter_y")
 
-    # Dropdowns for user to select X-axis and Y-axis features
-    x_feature = st.selectbox("Select X-axis Feature", options=combined_df.columns)
-    y_feature = st.selectbox("Select Y-axis Feature", options=combined_df.columns)
-
-    # Scatter Plot
     fig, ax = plt.subplots(figsize=(10, 6))
-    ax.set_facecolor((0, 0, 0, 0))  # Make axes background fully transparent
+    ax.set_facecolor((0, 0, 0, 0))
     fig.patch.set_alpha(0.0)
-    scores = combined_df['score']
+    scores = data['score']
     scatter = ax.scatter(
-        combined_df[x_feature],
-        combined_df[y_feature],
+        data[x_feature],
+        data[y_feature],
         c=scores,
         cmap='viridis',
         alpha=0.7,
@@ -51,7 +34,6 @@ else:
     ax.set_ylabel(y_feature, fontsize=12, fontweight='bold', color='red')
     ax.set_title(f"Scatter Plot: {x_feature} vs. {y_feature} (Colored by Score)", fontsize=14, fontweight='bold', color='red')
 
-    # Customize tick labels for visibility
     for label in ax.get_xticklabels():
         label.set_color('red')
     for label in ax.get_yticklabels():
@@ -59,28 +41,24 @@ else:
 
     st.pyplot(fig)
 
-    # Line Graph: Feature Trends Over Time
+# Function to generate line graph
+def generate_line_graph(data):
     st.title("Line Graph for Feature Trends Over Time")
+    feature = st.selectbox("Select a Feature for Trend Visualization", options=data.columns, key="line_feature")
+    
+    if feature in data.columns and 'month' in data.columns:
+        trend = data.groupby('month')[feature].mean()
 
-    # Select a feature for line graph
-    feature = st.selectbox("Select a Feature for Trend Visualization", options=combined_df.columns)
-
-    # Group data by month and calculate average for the selected feature
-    if feature in combined_df.columns and 'month' in combined_df.columns:
-        trend = combined_df.groupby('month')[feature].mean()
-
-        # Plot line graph
         fig, ax = plt.subplots(figsize=(10, 6))
-        ax.set_facecolor((0, 0, 0, 0))  # Make axes background fully transparent
+        ax.set_facecolor((0, 0, 0, 0))
         fig.patch.set_alpha(0.0)
         ax.plot(trend.index, trend.values, marker='o', color='blue', linestyle='-', linewidth=2)
         ax.set_title(f"Average {feature} by Month", fontsize=14, fontweight='bold', color='red')
         ax.set_xlabel("Month", fontsize=12, fontweight='bold', color='red')
         ax.set_ylabel(f"{feature} (Average)", fontsize=12, fontweight='bold', color='red')
-        ax.set_xticks(range(1, 13))  # Show all 12 months on the x-axis
+        ax.set_xticks(range(1, 13))
         ax.grid(visible=True, linestyle='--', linewidth=0.5, color='gray')
 
-        # Customize tick labels for visibility
         for label in ax.get_xticklabels():
             label.set_color('red')
         for label in ax.get_yticklabels():
@@ -89,3 +67,21 @@ else:
         st.pyplot(fig)
     else:
         st.error("Unable to generate trend visualization. Ensure the dataset includes valid time-related data.")
+
+# Main app logic
+combined_df = load_data()
+if 'date' in combined_df.columns:
+    combined_df['date'] = pd.to_datetime(combined_df['date'])
+    combined_df['month'] = combined_df['date'].dt.month
+else:
+    st.error("The dataset must include a 'date' column for time-based visualizations.")
+
+if "score" not in combined_df.columns:
+    st.error("The dataset does not contain a 'score' column. Please ensure the data includes this column.")
+else:
+    visualization_choice = st.radio("Select Visualization Type", ["Scatter Plot", "Line Graph"])
+
+    if visualization_choice == "Scatter Plot":
+        generate_scatter_plot(combined_df)
+    elif visualization_choice == "Line Graph":
+        generate_line_graph(combined_df)
