@@ -10,6 +10,14 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import matplotlib.pyplot as plt
 
+
+@st.cache_data
+def load_data():
+    cleaned_df = pd.read_csv("data/independent_variables_dataset.csv")  # Replace with your file path
+    return cleaned_df
+
+# Load data
+combined_df = load_data()
 # Ensure required data is in session state
 if "filtered_df" in st.session_state and "target" in st.session_state:
 
