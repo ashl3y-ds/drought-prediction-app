@@ -69,6 +69,11 @@ def generate_line_graph(data):
     else:
         st.error("Unable to generate trend visualization. Ensure the dataset includes valid time-related data.")
 
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.colors import LinearSegmentedColormap
+
 def generate_heatmap(data):
     st.title("Heatmap of Correlation Analysis")
     st.write("This heatmap displays the correlation between all numerical features in the dataset.")
@@ -83,9 +88,9 @@ def generate_heatmap(data):
     if not numerical_data.empty:
         corr_matrix = numerical_data.corr()
 
-        # Create a custom neon colormap that transitions between bright neon colors
-        neon_cmap = LinearSegmentedColormap.from_list(
-            'neon', ['#FF007F', '#FF6EC7', '#39FF14', '#00FFFF', '#F1C40F', '#8A2BE2']
+        # Create a custom purple-to-pink colormap with higher intensity
+        purple_pink_cmap = LinearSegmentedColormap.from_list(
+            'purple_to_pink', ['#800080', '#FF00FF', '#FF1493', '#FF69B4']  # Strong purple and pink gradient
         )
 
         # Set up a larger figure with a black background
@@ -93,18 +98,18 @@ def generate_heatmap(data):
         ax.set_facecolor('black')  # Set background color to black
         fig.patch.set_alpha(0.0)
 
-        # Plot heatmap with bright neon colors and larger cells
+        # Plot heatmap with purple-to-pink colormap and increased intensity
         sns.heatmap(
             corr_matrix,
             annot=True,
             fmt=".2f",
-            cmap=neon_cmap,  # Using neon colormap
+            cmap=purple_pink_cmap,  # Using purple-to-pink colormap
             cbar=True,
             square=True,
             linewidths=1.5,  # Thicker line separating cells for a bolder matrix
             ax=ax,
-            annot_kws={"size": 20, "weight": "bold", "color": "#000000"},  # Black text for contrast
-            cbar_kws={"label": "Correlation Coefficient", 'shrink': 0.75},  # Shrinking the color bar
+            annot_kws={"size": 20, "weight": "bold", "color": "#FFFFFF"},  # White text for contrast
+            cbar_kws={"label": "Correlation Coefficient", 'shrink': 0.75},  # Color bar label and shrink size
             xticklabels=corr_matrix.columns,  # Show feature names on both axes
             yticklabels=corr_matrix.columns,  # Show feature names on both axes
         )
@@ -122,7 +127,6 @@ def generate_heatmap(data):
         st.pyplot(fig)
     else:
         st.error("No numerical data available to compute correlations.")
-
 # Main app logic
 combined_df = load_data()
 if 'date' in combined_df.columns:
