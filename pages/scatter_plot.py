@@ -34,6 +34,7 @@ else:
 
     # Scatter Plot
     fig, ax = plt.subplots(figsize=(10, 6))
+    ax.set_facecolor((0, 0, 0, 0))  # Make axes background fully transparent
     fig.patch.set_alpha(0.0)
     scores = combined_df['score']
     scatter = ax.scatter(
