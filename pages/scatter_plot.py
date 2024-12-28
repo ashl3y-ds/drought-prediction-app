@@ -15,7 +15,7 @@ def load_data():
 combined_df = load_data()
 
 # Scatter Plot Generator
-st.title("Interactive Scatter Plot with Color Coding")
+st.title("Scatter Plot to  to display the relationship between two variables")
 
 st.write("Choose the features to plot and optionally color code scatter points.")
 
