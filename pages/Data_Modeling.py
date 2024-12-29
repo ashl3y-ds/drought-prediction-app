@@ -93,25 +93,27 @@ fig, ax = plt.subplots(figsize=(6, 4))
 ax.set_facecolor((0, 0, 0, 0))
 fig.patch.set_alpha(0.0)
 
-# Plot the confusion matrix with a black grid for line visibility
-ax.matshow(cm, cmap='coolwarm', alpha=0.7)
+# Plot the confusion matrix
+cax = ax.matshow(cm, cmap='coolwarm', alpha=0.7)
+
+# Display matrix values
 for i in range(cm.shape[0]):
     for j in range(cm.shape[1]):
         ax.text(x=j, y=i, s=cm[i, j], ha="center", va="center", color="black", fontsize=10)
 
-# Customizing labels
+# Add labels and title
 plt.xlabel("Predicted Labels", fontsize=12, fontweight="bold", color="red")
 plt.ylabel("True Labels", fontsize=12, fontweight="bold", color="red")
 plt.title("Confusion Matrix", fontsize=14, fontweight="bold", color="red")
 
-# Setting tick parameters for red tick labels
+# Customize tick labels
 ax.tick_params(axis="x", colors="red", labelsize=10)
 ax.tick_params(axis="y", colors="red", labelsize=10)
 
-# Add gridlines for better separation of cells
-ax.set_xticks(range(cm.shape[1]))
-ax.set_yticks(range(cm.shape[0]))
-ax.grid(color="black", linestyle="-", linewidth=0.8)  # Black thin grid lines
+# Make matrix border (spines) more visible
+for spine in ax.spines.values():
+    spine.set_edgecolor("black")  # Set border color
+    spine.set_linewidth(3)       # Set border thickness
 
 st.pyplot(fig)
 
