@@ -86,7 +86,7 @@ def generate_heatmap(data):
         corr_matrix = numerical_data.corr()
 
         # Set up a larger figure with a black background and purple-pink colormap
-        fig, ax = plt.subplots(figsize=(20, 18))  # Increase figure size for larger matrix
+        fig, ax = plt.subplots(figsize=(24, 18))  # Increase figure size for larger matrix
         ax.set_facecolor('black')  # Set background color to black
         fig.patch.set_alpha(0.0)
 
@@ -103,15 +103,11 @@ def generate_heatmap(data):
             square=True,
             linewidths=1.2,  # Thicker line separating cells
             ax=ax,
-            annot_kws={"size": 20, "weight": "bold", "color": "#F5F5F5"},  # Larger annotation text
+            annot_kws={"size": 15, "weight": "bold", "color": "#F5F5F5"},  # Larger annotation text
             cbar_kws={"label": "Correlation Coefficient", 'shrink': 0.8},  # Color bar label and shrink size
             xticklabels=corr_matrix.columns,  # Show feature names on both axes
             yticklabels=corr_matrix.columns  # Show feature names on both axes
         )
-
-        # Increase the size of the cells further by adjusting tick spacing
-        ax.set_xticks(range(len(corr_matrix.columns)))
-        ax.set_yticks(range(len(corr_matrix.columns)))
 
         # Adjust the font size of the axis labels
         ax.set_xticklabels(corr_matrix.columns, fontsize=16, fontweight='bold', color='white')
