@@ -88,21 +88,32 @@ if "score" in cleaned_df.columns:
         st.warning(f"Model '{algorithm}' is already trained and saved. Train a new model or update existing models.")
 
     # Display confusion matrix
-    st.write("### Confusion Matrix")
-    fig, ax = plt.subplots(figsize=(6, 4))
-    ax.set_facecolor((0, 0, 0, 0))
-    fig.patch.set_alpha(0.0)
-    ax.matshow(cm, cmap='coolwarm', alpha=0.7)
-    for i in range(cm.shape[0]):
-        for j in range(cm.shape[1]):
-            ax.text(x=j, y=i, s=cm[i, j], ha='center', va='center', color='black')
+   st.write("### Confusion Matrix")
+fig, ax = plt.subplots(figsize=(6, 4))
+ax.set_facecolor((0, 0, 0, 0))
+fig.patch.set_alpha(0.0)
 
-    plt.xlabel("Predicted Labels" , fontsize=12, fontweight="bold", color="red")
-    plt.ylabel("True Labels" , fontsize=12, fontweight="bold", color="red")
-    plt.title("Confusion Matrix" , fontsize=12, fontweight="bold", color="red")
-    ax.tick_params(axis="x", colors="white", labelsize=10)  # Red x-axis ticks
-    ax.tick_params(axis="y", colors="white", labelsize=10)  # Red y-axis ticks
-    st.pyplot(fig)
+# Plot the confusion matrix with a black grid for line visibility
+ax.matshow(cm, cmap='coolwarm', alpha=0.7)
+for i in range(cm.shape[0]):
+    for j in range(cm.shape[1]):
+        ax.text(x=j, y=i, s=cm[i, j], ha="center", va="center", color="black", fontsize=10)
+
+# Customizing labels
+plt.xlabel("Predicted Labels", fontsize=12, fontweight="bold", color="red")
+plt.ylabel("True Labels", fontsize=12, fontweight="bold", color="red")
+plt.title("Confusion Matrix", fontsize=14, fontweight="bold", color="red")
+
+# Setting tick parameters for red tick labels
+ax.tick_params(axis="x", colors="red", labelsize=10)
+ax.tick_params(axis="y", colors="red", labelsize=10)
+
+# Add gridlines for better separation of cells
+ax.set_xticks(range(cm.shape[1]))
+ax.set_yticks(range(cm.shape[0]))
+ax.grid(color="black", linestyle="-", linewidth=0.8)  # Black thin grid lines
+
+st.pyplot(fig)
 
     # Display classification report for the selected model
 st.write(f"### {algorithm} Classification Report:")
