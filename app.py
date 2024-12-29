@@ -8,8 +8,8 @@ st.write("Use the sidebar to navigate to different sections of this app.")
 st.write(
     """
     ### Available Sections:
-    - **Read Data:** Upload drought-related datasets.
-    - **Preprocess Data:** Clean and preprocess your data.
+    - **Display Data:** Upload drought-related datasets.
+    - **Data Visualization:** Display diagrams to show information.
     - **Data Modeling:** Train the model with dataset.
     - **Predict New Data:** Predict new data drought level.
     """
