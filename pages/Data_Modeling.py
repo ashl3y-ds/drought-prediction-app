@@ -90,7 +90,7 @@ if "score" in cleaned_df.columns:
     # Display confusion matrix
     st.write("### Confusion Matrix")
     fig, ax = plt.subplots(figsize=(6, 4))
-     ax.set_facecolor((0, 0, 0, 0))
+    ax.set_facecolor((0, 0, 0, 0))
     fig.patch.set_alpha(0.0)
     ax.matshow(cm, cmap='coolwarm', alpha=0.7)
     for i in range(cm.shape[0]):
