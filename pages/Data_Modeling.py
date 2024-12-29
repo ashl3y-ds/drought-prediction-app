@@ -100,6 +100,8 @@ if "score" in cleaned_df.columns:
     plt.xlabel("Predicted Labels" , fontsize=12, fontweight="bold", color="red")
     plt.ylabel("True Labels" , fontsize=12, fontweight="bold", color="red")
     plt.title("Confusion Matrix" , fontsize=12, fontweight="bold", color="red")
+    ax.tick_params(axis="x", colors="red", labelsize=10)  # Red x-axis ticks
+    ax.tick_params(axis="y", colors="red", labelsize=10)  # Red y-axis ticks
     st.pyplot(fig)
 
     # Display classification report for the selected model
