@@ -113,33 +113,33 @@ ax.tick_params(axis="y", colors="red", labelsize=10)
 
 st.pyplot(fig)
     # Display classification report for the selected model
-    st.write(f"### {algorithm} Classification Report:")
-    st.dataframe(report_df.style.format(precision=2))
+st.write(f"### {algorithm} Classification Report:")
+st.dataframe(report_df.style.format(precision=2))
 
-    metric = st.selectbox("Select Metric to Compare", ["Precision", "Recall", "F1-Score", "Accuracy"])
+metric = st.selectbox("Select Metric to Compare", ["Precision", "Recall", "F1-Score", "Accuracy"])
 
-    # Compare model metrics
-    if st.button("Compare Model Metrics"):
-        if len(st.session_state["model_reports"]) > 1:
-            # Extract unique models and metrics
-            unique_model_reports = {
-                report["model_name"]: report
-                for report in st.session_state["model_reports"]
-            }
+# Compare model metrics
+if st.button("Compare Model Metrics"):
+    if len(st.session_state["model_reports"]) > 1:
+        # Extract unique models and metrics
+        unique_model_reports = {
+            report["model_name"]: report
+            for report in st.session_state["model_reports"]
+        }
 
-            model_names = list(unique_model_reports.keys())
-            metric_scores = []
+        model_names = list(unique_model_reports.keys())
+        metric_scores = []
 
-            # Extract metric scores for unique models
-            for report in unique_model_reports.values():
-                if metric == "Precision":
-                    metric_scores.append(report["classification_report"].loc["weighted avg", "precision"] * 100)
-                elif metric == "Recall":
-                    metric_scores.append(report["classification_report"].loc["weighted avg", "recall"] * 100)
-                elif metric == "F1-Score":
-                    metric_scores.append(report["classification_report"].loc["weighted avg", "f1-score"] * 100)
-                elif metric == "Accuracy":
-                    metric_scores.append(report["accuracy"])
+        # Extract metric scores for unique models
+        for report in unique_model_reports.values():
+            if metric == "Precision":
+                metric_scores.append(report["classification_report"].loc["weighted avg", "precision"] * 100)
+            elif metric == "Recall":
+                metric_scores.append(report["classification_report"].loc["weighted avg", "recall"] * 100)
+            elif metric == "F1-Score":
+                metric_scores.append(report["classification_report"].loc["weighted avg", "f1-score"] * 100)
+            elif metric == "Accuracy":
+                metric_scores.append(report["accuracy"])
 
             # Plot the bar graph
             fig, ax = plt.subplots(figsize=(10, 6))
