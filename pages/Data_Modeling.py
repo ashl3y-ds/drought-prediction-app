@@ -87,19 +87,31 @@ if "score" in cleaned_df.columns:
     else:
         st.warning(f"Model '{algorithm}' is already trained and saved. Train a new model or update existing models.")
 
-    # Display confusion matrix
     st.write("### Confusion Matrix")
-    fig, ax = plt.subplots(figsize=(6, 4))
-    ax.matshow(cm, cmap='coolwarm', alpha=0.7)
-    for i in range(cm.shape[0]):
-        for j in range(cm.shape[1]):
-            ax.text(x=j, y=i, s=cm[i, j], ha='center', va='center', color='black')
+fig, ax = plt.subplots(figsize=(6, 4))
+ax.set_facecolor((0, 0, 0, 0))
+fig.patch.set_alpha(0.0)
 
-    plt.xlabel("Predicted Labels")
-    plt.ylabel("True Labels")
-    plt.title("Confusion Matrix")
-    st.pyplot(fig)
+# Plot the confusion matrix
+ax.matshow(cm, cmap="coolwarm", alpha=0.7)
 
+# Add annotations with red font
+for i in range(cm.shape[0]):
+    for j in range(cm.shape[1]):
+        ax.text(x=j, y=i, s=cm[i, j], ha="center", va="center", color="red", fontsize=12, fontweight="bold")
+
+# Set axis labels and title
+ax.set_xlabel("Predicted Labels", fontsize=12, fontweight="bold", color="red")
+ax.set_ylabel("True Labels", fontsize=12, fontweight="bold", color="red")
+ax.set_title("Confusion Matrix", fontsize=14, fontweight="bold", color="red")
+
+# Style axis tick labels as red
+ax.xaxis.set_label_position("bottom")
+ax.xaxis.set_ticks_position("bottom")  # Matplotlib default has x-axis labels on the top for matshow
+ax.tick_params(axis="x", colors="red", labelsize=10)
+ax.tick_params(axis="y", colors="red", labelsize=10)
+
+st.pyplot(fig)
     # Display classification report for the selected model
     st.write(f"### {algorithm} Classification Report:")
     st.dataframe(report_df.style.format(precision=2))
