@@ -85,28 +85,28 @@ def generate_heatmap(data):
     if not numerical_data.empty:
         corr_matrix = numerical_data.corr()
 
-        # Create a custom blue-to-green colormap with high intensity
-        blue_green_cmap = LinearSegmentedColormap.from_list(
-            'blue_to_green', ['#0000FF', '#00FF00']  # Transition from blue to green
+        # Create a custom purple-to-pink colormap with higher intensity
+        purple_pink_cmap = LinearSegmentedColormap.from_list(
+            'purple_to_pink', ['#800080', '#FF00FF', '#FF1493', '#FF69B4']  # Strong purple and pink gradient
         )
 
-        # Set up a much larger figure for an enhanced size
-        fig, ax = plt.subplots(figsize=(40, 36))  # Increased figure size (10x larger than default)
+        # Set up a larger figure with a black background
+        fig, ax = plt.subplots(figsize=(18, 16))  # Larger size for bigger cells
         ax.set_facecolor('black')  # Set background color to black
         fig.patch.set_alpha(0.0)
 
-        # Plot heatmap with blue-to-green colormap and bigger cell size
+        # Plot heatmap with purple-to-pink colormap and increased intensity
         sns.heatmap(
             corr_matrix,
             annot=True,
             fmt=".2f",
-            cmap=blue_green_cmap,  # Using blue-to-green colormap
+            cmap=purple_pink_cmap,  # Using purple-to-pink colormap
             cbar=True,
             square=True,
-            linewidths=2,  # Thicker line separating cells for more prominence
+            linewidths=1.5,  # Thicker line separating cells for a bolder matrix
             ax=ax,
-            annot_kws={"size": 40, "weight": "bold", "color": "#FFFFFF"},  # Larger, bold white text
-            cbar_kws={"label": "Correlation Coefficient", 'shrink': 0.75},  # Shrink the color bar slightly
+            annot_kws={"size": 20, "weight": "bold", "color": "#FFFFFF"},  # White text for contrast
+            cbar_kws={"label": "Correlation Coefficient", 'shrink': 0.75},  # Color bar label and shrink size
             xticklabels=corr_matrix.columns,  # Show feature names on both axes
             yticklabels=corr_matrix.columns,  # Show feature names on both axes
         )
@@ -114,11 +114,11 @@ def generate_heatmap(data):
         # Make cells bigger and adjust tick positions
         ax.set_xticks(np.arange(len(corr_matrix.columns)) + 0.5)  # Moves ticks closer to center of cells
         ax.set_yticks(np.arange(len(corr_matrix.columns)) + 0.5)  # Moves ticks closer to center of cells
-        ax.set_xticklabels(corr_matrix.columns, fontsize=28, fontweight='bold', color='white')  # Increase font size for labels
-        ax.set_yticklabels(corr_matrix.columns, fontsize=28, fontweight='bold', color='white')  # Increase font size for labels
+        ax.set_xticklabels(corr_matrix.columns, fontsize=16, fontweight='bold', color='white')
+        ax.set_yticklabels(corr_matrix.columns, fontsize=16, fontweight='bold', color='white')
 
         # Title with a larger and bold font size
-        ax.set_title("Feature Correlation Heatmap", fontsize=36, fontweight='bold', color='white')
+        ax.set_title("Feature Correlation Heatmap", fontsize=24, fontweight='bold', color='white')
 
         # Display the plot
         st.pyplot(fig)
