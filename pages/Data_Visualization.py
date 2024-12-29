@@ -103,7 +103,7 @@ def generate_heatmap(data):
             square=True,
             linewidths=1.2,  # Thicker line separating cells
             ax=ax,
-            annot_kws={"size": 15, "weight": "bold", "color": "#F5F5F5"},  # Larger annotation text
+            annot_kws={"size": 15, "weight": "bold", "color": "#141414"},  # Larger annotation text
             cbar_kws={"label": "Correlation Coefficient", 'shrink': 0.8},  # Color bar label and shrink size
             xticklabels=corr_matrix.columns,  # Show feature names on both axes
             yticklabels=corr_matrix.columns  # Show feature names on both axes
