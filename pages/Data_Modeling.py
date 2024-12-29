@@ -96,10 +96,16 @@ fig.patch.set_alpha(0.0)
 # Plot the confusion matrix
 cax = ax.matshow(cm, cmap='coolwarm', alpha=0.7)
 
-# Display matrix values
+# Display the matrix values
 for i in range(cm.shape[0]):
     for j in range(cm.shape[1]):
         ax.text(x=j, y=i, s=cm[i, j], ha="center", va="center", color="black", fontsize=10)
+
+# Add gridlines by drawing rectangles around each cell
+for i in range(cm.shape[0]):
+    for j in range(cm.shape[1]):
+        rect = plt.Rectangle([j-0.5, i-0.5], 1, 1, fill=False, edgecolor="black", linewidth=1.5)
+        ax.add_patch(rect)
 
 # Add labels and title
 plt.xlabel("Predicted Labels", fontsize=12, fontweight="bold", color="red")
@@ -110,13 +116,7 @@ plt.title("Confusion Matrix", fontsize=14, fontweight="bold", color="red")
 ax.tick_params(axis="x", colors="red", labelsize=10)
 ax.tick_params(axis="y", colors="red", labelsize=10)
 
-# Make matrix border (spines) more visible
-for spine in ax.spines.values():
-    spine.set_edgecolor("black")  # Set border color
-    spine.set_linewidth(3)       # Set border thickness
-
 st.pyplot(fig)
-
 
     # Display classification report for the selected model
 st.write(f"### {algorithm} Classification Report:")
