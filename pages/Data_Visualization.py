@@ -85,39 +85,45 @@ def generate_heatmap(data):
     if not numerical_data.empty:
         corr_matrix = numerical_data.corr()
 
-        # Set up a larger figure with a black background and purple-pink colormap
-        fig, ax = plt.subplots(figsize=(16, 12))  # Larger figure size
+        # Create a custom purple-to-pink colormap with higher intensity
+        purple_pink_cmap = LinearSegmentedColormap.from_list(
+            'purple_to_pink', ['#800080', '#FF00FF', '#FF1493', '#FF69B4']  # Strong purple and pink gradient
+        )
+
+        # Set up a larger figure with a black background
+        fig, ax = plt.subplots(figsize=(18, 16))  # Larger size for bigger cells
         ax.set_facecolor('black')  # Set background color to black
         fig.patch.set_alpha(0.0)
 
-        # Using a purple-pink gradient color palette
-        purple_pink_cmap = plt.cm.Spectral  # A good purple-pink transition colormap
-
-        # Plot heatmap with the customized color scheme
+        # Plot heatmap with purple-to-pink colormap and increased intensity
         sns.heatmap(
             corr_matrix,
             annot=True,
             fmt=".2f",
-            cmap=purple_pink_cmap,  # Purple-pink colormap
+            cmap=purple_pink_cmap,  # Using purple-to-pink colormap
             cbar=True,
             square=True,
-            linewidths=1.0,  # Thicker line separating cells
+            linewidths=1.5,  # Thicker line separating cells for a bolder matrix
             ax=ax,
-            annot_kws={"size": 16, "weight": "bold", "color": "#F5F5F5"},  # Light gray text for visibility
-            cbar_kws={"label": "Correlation Coefficient", 'shrink': 0.8},  # Color bar label and shrink size
+            annot_kws={"size": 20, "weight": "bold", "color": "#FFFFFF"},  # White text for contrast
+            cbar_kws={"label": "Correlation Coefficient", 'shrink': 0.75},  # Color bar label and shrink size
             xticklabels=corr_matrix.columns,  # Show feature names on both axes
-            yticklabels=corr_matrix.columns  # Show feature names on both axes
+            yticklabels=corr_matrix.columns,  # Show feature names on both axes
         )
 
-        # Increase the size of the cells
-        ax.set_xticks(range(len(corr_matrix.columns)))
-        ax.set_yticks(range(len(corr_matrix.columns)))
+        # Make cells bigger and adjust tick positions
+        ax.set_xticks(np.arange(len(corr_matrix.columns)) + 0.5)  # Moves ticks closer to center of cells
+        ax.set_yticks(np.arange(len(corr_matrix.columns)) + 0.5)  # Moves ticks closer to center of cells
+        ax.set_xticklabels(corr_matrix.columns, fontsize=16, fontweight='bold', color='white')
+        ax.set_yticklabels(corr_matrix.columns, fontsize=16, fontweight='bold', color='white')
 
-        ax.set_title("Feature Correlation Heatmap", fontsize=18, fontweight='bold', color='white')
+        # Title with a larger and bold font size
+        ax.set_title("Feature Correlation Heatmap", fontsize=24, fontweight='bold', color='white')
+
+        # Display the plot
         st.pyplot(fig)
     else:
         st.error("No numerical data available to compute correlations.")
-
 
 # Main app logic
 combined_df = load_data()
