@@ -76,7 +76,7 @@ def generate_heatmap(data):
     st.write("This heatmap displays the correlation between all numerical features in the dataset.")
     
     # List of features to exclude from correlation analysis
-    exclude_features = ['date', 'fips', 'day', 'month', 'year']
+    exclude_features = ['date', 'fips', 'day', 'month', 'year' , 'score']
     
     # Remove excluded features
     numerical_data = data.drop(columns=[col for col in exclude_features if col in data.columns])
