@@ -16,4 +16,4 @@ st.write(
 )
 
 # Add an optional image or further details
-st.image("https://example.com/some-image.jpg", caption="Example drought monitoring")  # Replace with your image URL or file path.
+st.image("image/climate-change-and-droug.jpeg__800x500_q80_crop_subject_location-570,250_subsampling-2.jpg", caption="Example drought monitoring")  # Replace with your image URL or file path.
