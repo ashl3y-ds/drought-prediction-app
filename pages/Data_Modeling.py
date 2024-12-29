@@ -101,12 +101,6 @@ for i in range(cm.shape[0]):
     for j in range(cm.shape[1]):
         ax.text(x=j, y=i, s=cm[i, j], ha="center", va="center", color="black", fontsize=10)
 
-# Add gridlines for stronger cell borders
-ax.set_xticks(range(cm.shape[1]))
-ax.set_yticks(range(cm.shape[0]))
-ax.grid(which="major", color="black", linestyle="-", linewidth=2)  # Black thick gridlines
-ax.tick_params(axis="both", which="both", length=0)  # Hide tick marks to keep focus on gridlines
-
 # Add labels and title
 plt.xlabel("Predicted Labels", fontsize=12, fontweight="bold", color="red")
 plt.ylabel("True Labels", fontsize=12, fontweight="bold", color="red")
@@ -115,6 +109,11 @@ plt.title("Confusion Matrix", fontsize=14, fontweight="bold", color="red")
 # Customize tick labels
 ax.tick_params(axis="x", colors="red", labelsize=10)
 ax.tick_params(axis="y", colors="red", labelsize=10)
+
+# Make matrix border (spines) more visible
+for spine in ax.spines.values():
+    spine.set_edgecolor("black")  # Set border color
+    spine.set_linewidth(3)       # Set border thickness
 
 st.pyplot(fig)
 
