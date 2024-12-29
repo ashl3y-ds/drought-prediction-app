@@ -95,7 +95,7 @@ if "score" in cleaned_df.columns:
     ax.matshow(cm, cmap='coolwarm', alpha=0.7)
     for i in range(cm.shape[0]):
         for j in range(cm.shape[1]):
-            ax.text(x=j, y=i, s=cm[i, j], ha='center', va='center', color='black')
+            ax.text(x=j, y=i, s=cm[i, j], ha='center', va='center', color='white')
 
     plt.xlabel("Predicted Labels" , fontsize=12, fontweight="bold", color="red")
     plt.ylabel("True Labels" , fontsize=12, fontweight="bold", color="red")
